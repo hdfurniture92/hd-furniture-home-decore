@@ -1,10 +1,9 @@
-// Firebase configuration
-// Replace the values below with your Firebase Web App config.
 export const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT.firebaseapp.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT.firebasestorage.app",
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  apiKey: "YAHAN_APNI_NAYI_API_KEY_PASTE_KARO",
+  authDomain: "hd-furniture-home-decore.firebaseapp.com",
+  projectId: "hd-furniture-home-decore",
+  storageBucket: "hd-furniture-home-decore.firebasestorage.app",
+  messagingSenderId: "321741691194",
+  appId: "1:321741691194:web:cc1fc6eb6f08beff845803",
+  measurementId: "G-SW88X2LNCZ"
 };
