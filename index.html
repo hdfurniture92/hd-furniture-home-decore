@@ -134,11 +134,8 @@ footer p,footer a{font:13px Arial,sans-serif;color:#dfd2c2}
 <section id="featured" class="alt">
   <div class="container">
     <div class="section-head"><div class="eyebrow">Collection</div><h2>Featured Products</h2></div>
-    <div class="products">
+    <div id="featuredProducts" class="products">
       <article class="product"><div class="product-img"><img src="walnut-geometric-inlay-dining-table.png" alt="Walnut Geometric Inlay Dining Table"></div><div class="product-info"><h3>Walnut Geometric Inlay Dining Table</h3><p>Dining</p><strong>₹30,000</strong></div></article>
-      <article class="product"><div class="product-img">PRODUCT IMAGE</div><div class="product-info"><h3>Product Name</h3><p>Product details</p></div></article>
-      <article class="product"><div class="product-img">PRODUCT IMAGE</div><div class="product-info"><h3>Product Name</h3><p>Product details</p></div></article>
-      <article class="product"><div class="product-img">PRODUCT IMAGE</div><div class="product-info"><h3>Product Name</h3><p>Product details</p></div></article>
     </div>
   </div>
 </section>
@@ -166,12 +163,7 @@ footer p,footer a{font:13px Arial,sans-serif;color:#dfd2c2}
 <section id="new">
   <div class="container">
     <div class="section-head"><div class="eyebrow">Latest</div><h2>New Arrivals</h2></div>
-    <div class="products">
-      <article class="product"><div class="product-img">PRODUCT IMAGE</div><div class="product-info"><h3>New Product</h3><p>Product details</p></div></article>
-      <article class="product"><div class="product-img">PRODUCT IMAGE</div><div class="product-info"><h3>New Product</h3><p>Product details</p></div></article>
-      <article class="product"><div class="product-img">PRODUCT IMAGE</div><div class="product-info"><h3>New Product</h3><p>Product details</p></div></article>
-      <article class="product"><div class="product-img">PRODUCT IMAGE</div><div class="product-info"><h3>New Product</h3><p>Product details</p></div></article>
-    </div>
+    <div id="newProducts" class="products"></div>
   </div>
 </section>
 
@@ -206,5 +198,15 @@ footer p,footer a{font:13px Arial,sans-serif;color:#dfd2c2}
     </div>
   </div>
 </footer>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js';
+import { getFirestore, collection, getDocs, query, orderBy } from 'https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js';
+import { firebaseConfig } from './firebase-config.js';
+const app=initializeApp(firebaseConfig); const db=getFirestore(app);
+const esc=s=>String(s??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+try{const snap=await getDocs(query(collection(db,'products'),orderBy('createdAt','desc')));const products=snap.docs.map(d=>d.data());const featured=document.getElementById('featuredProducts');const fresh=document.getElementById('newProducts');if(products.length){featured.innerHTML=products.slice(0,8).map(p=>card(p)).join('');fresh.innerHTML=products.slice(0,4).map(p=>card(p)).join('');}}catch(e){/* Site keeps the original first product if Firebase is not configured yet. */}
+function card(p){return `<article class="product"><div class="product-img"><img src="${esc(p.imageUrl)}" alt="${esc(p.name)}"></div><div class="product-info"><h3>${esc(p.name)}</h3><p>${esc(p.category)}</p><strong>${esc(p.price)}</strong>${p.description?`<p>${esc(p.description)}</p>`:''}</div></article>`}
+</script>
 </body>
 </html>

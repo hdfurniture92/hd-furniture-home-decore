@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HD Furniture — Admin</title>
+<style>
+:root{--walnut:#5a3825;--dark:#3d2519;--beige:#f3eadb;--cream:#fbf7ef;--white:#fffdf9;--muted:#76685b}
+*{box-sizing:border-box}body{margin:0;background:var(--cream);color:#2e241d;font-family:Arial,sans-serif}.wrap{max-width:980px;margin:0 auto;padding:28px 18px 60px}.top{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:25px}.brand{font-family:Georgia,serif;font-size:24px;font-weight:700;color:var(--dark)}button{border:0;background:var(--walnut);color:#fff;padding:12px 18px;border-radius:4px;font-weight:700;cursor:pointer}button.secondary{background:#e7dac8;color:var(--dark)}button.danger{background:#8d2f2f}.card{background:var(--white);border:1px solid #dfd1bd;padding:25px;margin-bottom:22px;border-radius:6px}.hidden{display:none}.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}label{display:block;font-size:13px;font-weight:700;margin-bottom:6px}input,textarea,select{width:100%;padding:12px;border:1px solid #d8c8b4;background:#fffdfa;border-radius:3px;font:14px Arial,sans-serif}textarea{min-height:100px;resize:vertical}.full{grid-column:1/-1}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}.status{margin-top:12px;font-size:14px;color:var(--muted)}.products{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}.item{border:1px solid #dfd1bd;background:#fff;padding:12px}.item img{width:100%;aspect-ratio:1;object-fit:cover;display:block;background:#f5f5f5}.item h3{font-family:Georgia,serif;margin:10px 0 3px;font-size:18px}.item p{margin:3px 0;color:var(--muted);font-size:13px}.login{max-width:430px;margin:12vh auto}.note{background:#f5eadc;padding:12px;border-left:4px solid var(--walnut);font-size:13px;line-height:1.6}
+@media(max-width:700px){.grid,.products{grid-template-columns:1fr}.top{align-items:flex-start;flex-direction:column}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <section id="loginCard" class="card login">
+    <div class="brand">HD FURNITURE &amp; HOME DECORE</div>
+    <h2>Admin Login</h2>
+    <p class="note">Only your authorized Firebase account can add or delete products. Do not share the login.</p>
+    <form id="loginForm">
+      <p><label>Email</label><input id="loginEmail" type="email" required></p>
+      <p><label>Password</label><input id="loginPassword" type="password" required></p>
+      <button type="submit">Login</button>
+      <div id="loginStatus" class="status"></div>
+    </form>
+  </section>
+
+  <section id="adminApp" class="hidden">
+    <div class="top"><div class="brand">HD FURNITURE &amp; HOME DECORE — Admin</div><button id="logoutBtn" class="secondary">Logout</button></div>
+    <div class="card">
+      <h2>Add Product</h2>
+      <form id="productForm" class="grid">
+        <div><label>Product Photo</label><input id="photo" type="file" accept="image/*" required></div>
+        <div><label>Product Name</label><input id="name" required></div>
+        <div><label>Price</label><input id="price" placeholder="₹30,000" required></div>
+        <div><label>Category</label><input id="category" placeholder="Dining / Furniture / Home Décor" required></div>
+        <div class="full"><label>Short Description</label><textarea id="description"></textarea></div>
+        <div><label>Dimensions</label><input id="dimensions" placeholder="Optional"></div>
+        <div><label>Material</label><input id="material" placeholder="Optional"></div>
+        <div class="full actions"><button type="submit">Add Product</button><button type="reset" class="secondary">Clear</button></div>
+      </form>
+      <div id="productStatus" class="status"></div>
+    </div>
+    <div class="card"><h2>Products</h2><div id="products" class="products"></div></div>
+  </section>
+</div>
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js';
+import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js';
+import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, serverTimestamp, query, orderBy } from 'https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js';
+import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from 'https://www.gstatic.com/firebasejs/12.3.0/firebase-storage.js';
+import { firebaseConfig } from './firebase-config.js';
+
+const app=initializeApp(firebaseConfig); const auth=getAuth(app); const db=getFirestore(app); const storage=getStorage(app);
+const loginCard=document.getElementById('loginCard'), adminApp=document.getElementById('adminApp');
+const loginStatus=document.getElementById('loginStatus'), productStatus=document.getElementById('productStatus');
+
+document.getElementById('loginForm').addEventListener('submit', async e=>{e.preventDefault();loginStatus.textContent='Logging in...';try{await signInWithEmailAndPassword(auth,loginEmail.value,loginPassword.value);loginStatus.textContent='';}catch(err){loginStatus.textContent='Login failed. Check email and password.';}});
+document.getElementById('logoutBtn').onclick=()=>signOut(auth);
+
+onAuthStateChanged(auth,user=>{if(user){loginCard.classList.add('hidden');adminApp.classList.remove('hidden');loadProducts();}else{adminApp.classList.add('hidden');loginCard.classList.remove('hidden');}});
+
+async function loadProducts(){const box=document.getElementById('products');box.innerHTML='Loading...';try{const q=query(collection(db,'products'),orderBy('createdAt','desc'));const snap=await getDocs(q);box.innerHTML='';if(snap.empty){box.innerHTML='<p>No products added yet.</p>';return;}snap.forEach(d=>{const p=d.data();const el=document.createElement('div');el.className='item';el.innerHTML=`<img src="${p.imageUrl}" alt=""><h3>${escapeHtml(p.name)}</h3><p>${escapeHtml(p.category||'')}</p><p><strong>${escapeHtml(p.price||'')}</strong></p><button class="danger" data-id="${d.id}" data-path="${p.storagePath||''}">Delete</button>`;el.querySelector('button').onclick=()=>removeProduct(d.id,p.storagePath||'');box.appendChild(el);});}catch(e){box.innerHTML='<p>Could not load products. Check Firebase setup.</p>';}}
+
+async function removeProduct(id,path){if(!confirm('Delete this product?'))return;try{await deleteDoc(doc(db,'products',id));if(path){try{await deleteObject(ref(storage,path));}catch(_){}}loadProducts();}catch(e){alert('Delete failed.');}}
+
+document.getElementById('productForm').addEventListener('submit',async e=>{e.preventDefault();const file=photo.files[0];if(!file)return;productStatus.textContent='Uploading product...';try{const safe=file.name.replace(/[^a-zA-Z0-9._-]/g,'_');const storagePath=`products/${Date.now()}_${safe}`;const storageRef=ref(storage,storagePath);await uploadBytes(storageRef,file);const imageUrl=await getDownloadURL(storageRef);await addDoc(collection(db,'products'),{name:name.value.trim(),price:price.value.trim(),category:category.value.trim(),description:description.value.trim(),dimensions:dimensions.value.trim(),material:material.value.trim(),imageUrl,storagePath,createdAt:serverTimestamp()});e.target.reset();productStatus.textContent='Product added successfully.';loadProducts();}catch(err){console.error(err);productStatus.textContent='Could not add product. Check Firebase setup and rules.';}});
+function escapeHtml(s){return String(s).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));}
+</script>
+</body></html>
