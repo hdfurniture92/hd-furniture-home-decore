@@ -3,425 +3,182 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HD Furniture — Admin</title>
+<title>HD Furniture — Complete Admin</title>
 <style>
-:root{--walnut:#5a3825;--dark:#3d2519;--beige:#f3eadb;--cream:#fbf7ef;--white:#fffdf9;--muted:#76685b}
-*{box-sizing:border-box}
-body{margin:0;background:var(--cream);color:#2e241d;font-family:Arial,sans-serif}
-.wrap{max-width:980px;margin:0 auto;padding:28px 18px 60px}
-.top{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:25px}
-.brand{font-family:Georgia,serif;font-size:24px;font-weight:700;color:var(--dark)}
-button{border:0;background:var(--walnut);color:#fff;padding:12px 18px;border-radius:4px;font-weight:700;cursor:pointer}
-button.secondary{background:#e7dac8;color:var(--dark)}
-button.danger{background:#8d2f2f}
-.card{background:var(--white);border:1px solid #dfd1bd;padding:25px;margin-bottom:22px;border-radius:6px}
-.hidden{display:none}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-label{display:block;font-size:13px;font-weight:700;margin-bottom:6px}
-input,textarea,select{width:100%;padding:12px;border:1px solid #d8c8b4;background:#fffdfa;border-radius:3px;font:14px Arial,sans-serif}
-textarea{min-height:100px;resize:vertical}
-.full{grid-column:1/-1}
-.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
-.status{margin-top:12px;font-size:14px;color:var(--muted)}
-.products{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}
-.item{border:1px solid #dfd1bd;background:#fff;padding:12px}
-.item img{width:100%;aspect-ratio:1;object-fit:cover;display:block;background:#f5f5f5}
-.item h3{font-family:Georgia,serif;margin:10px 0 3px;font-size:18px}
-.item p{margin:3px 0;color:var(--muted);font-size:13px}
-.login{max-width:430px;margin:12vh auto}
-.note{background:#f5eadc;padding:12px;border-left:4px solid var(--walnut);font-size:13px;line-height:1.6}
-@media(max-width:700px){.grid,.products{grid-template-columns:1fr}.top{align-items:flex-start;flex-direction:column}}
+:root{--walnut:#5a3825;--dark:#3d2519;--cream:#fbf7ef;--white:#fffdf9;--muted:#76685b;--line:#dfd1bd}
+*{box-sizing:border-box}body{margin:0;background:var(--cream);color:#2e241d;font-family:Arial,sans-serif}
+.wrap{max-width:1200px;margin:auto;padding:24px 18px 60px}.top{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:20px}
+.brand{font:700 24px Georgia,serif;color:var(--dark)}button{border:0;background:var(--walnut);color:#fff;padding:11px 16px;border-radius:4px;font-weight:700;cursor:pointer}
+button.secondary{background:#e7dac8;color:var(--dark)}button.danger{background:#8d2f2f}.hidden{display:none!important}
+.card{background:var(--white);border:1px solid var(--line);padding:22px;margin-bottom:18px;border-radius:6px}.login{max-width:430px;margin:12vh auto}
+.tabs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:18px}.tab{background:#e7dac8;color:var(--dark)}.tab.active{background:var(--walnut);color:#fff}
+.panel{display:none}.panel.active{display:block}.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.full{grid-column:1/-1}label{display:block;font-size:13px;font-weight:700;margin-bottom:6px}
+input,textarea,select{width:100%;padding:11px;border:1px solid #d8c8b4;background:#fffdfa;border-radius:3px;font:14px Arial,sans-serif}
+textarea{min-height:100px;resize:vertical}.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:15px}.status{margin-top:10px;color:var(--muted);font-size:14px}
+.note{background:#f5eadc;border-left:4px solid var(--walnut);padding:12px;font-size:13px;line-height:1.5}
+.products{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}.item,.row{border:1px solid var(--line);background:#fff;padding:13px;border-radius:4px}
+.item img{width:100%;aspect-ratio:1;object-fit:cover}.thumbs{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}.thumb{width:65px;height:65px;object-fit:cover;border:1px solid var(--line)}
+.rowhead{display:flex;justify-content:space-between;gap:15px;align-items:center}.row h3{font:700 20px Georgia,serif;color:var(--dark);margin:0}
+.list{display:grid;gap:12px}.check{display:flex;gap:8px;align-items:center}.check input{width:auto}.small{font-size:12px;color:var(--muted)}
+@media(max-width:800px){.grid,.products{grid-template-columns:1fr}.top{flex-direction:column;align-items:flex-start}}
 </style>
 </head>
-
 <body>
 <div class="wrap">
 
 <section id="loginCard" class="card login">
-<div class="brand">HD FURNITURE &amp; HOME DECORE</div>
-<h2>Admin Login</h2>
-
-<p class="note">
-Only your authorized Firebase account can add or delete products. Do not share the login.
-</p>
-
-<form id="loginForm">
-
-<p>
-<label>Email</label>
-<input id="loginEmail" type="email" required>
-</p>
-
-<p>
-<label>Password</label>
-<input id="loginPassword" type="password" required>
-</p>
-
-<button type="submit">Login</button>
-
-<div id="loginStatus" class="status"></div>
-
-</form>
+<div class="brand">HD FURNITURE &amp; HOME DECORE</div><h2>Admin Login</h2>
+<p class="note">Only the authorized Firebase account can manage the website.</p>
+<form id="loginForm"><p><label>Email</label><input id="loginEmail" type="email" required></p>
+<p><label>Password</label><input id="loginPassword" type="password" required></p>
+<button type="submit">Login</button><div id="loginStatus" class="status"></div></form>
 </section>
-
 
 <section id="adminApp" class="hidden">
+<div class="top"><div class="brand">HD FURNITURE &amp; HOME DECORE — Admin</div><button id="logoutBtn" class="secondary">Logout</button></div>
 
-<div class="top">
-<div class="brand">HD FURNITURE &amp; HOME DECORE — Admin</div>
-<button id="logoutBtn" class="secondary">Logout</button>
+<div class="tabs">
+<button class="tab active" data-panel="productsPanel">Products</button>
+<button class="tab" data-panel="sitePanel">Entire Website</button>
+<button class="tab" data-panel="categoriesPanel">Categories</button>
+<button class="tab" data-panel="collectionsPanel">Collections</button>
+<button class="tab" data-panel="inquiriesPanel">Inquiries</button>
 </div>
 
+<div id="productsPanel" class="panel active">
 <div class="card">
-
-<h2>Add Product</h2>
-
+<h2 id="productTitle">Add Product</h2>
+<p class="note">You can upload multiple product images. The first image is the main product image. Existing product images can also be replaced/edited.</p>
 <form id="productForm" class="grid">
-
-<div>
-<label>Product Photo</label>
-<input id="photo" type="file" accept="image/*" required>
+<input id="productId" type="hidden">
+<div class="full"><label>Product Images — multiple allowed</label><input id="photos" type="file" accept="image/*" multiple><div id="existingImages" class="thumbs"></div></div>
+<div><label>Product Name</label><input id="pName" required></div>
+<div><label>Price</label><input id="pPrice" required></div>
+<div><label>Category</label><input id="pCategory" required></div>
+<div><label>Display Order</label><input id="pOrder" type="number" value="0"></div>
+<div class="full"><label>Short Description</label><textarea id="pDescription"></textarea></div>
+<div><label>Dimensions</label><input id="pDimensions"></div>
+<div><label>Material</label><input id="pMaterial"></div>
+<div class="check"><input id="pFeatured" type="checkbox"><label for="pFeatured">Show in Featured Products</label></div>
+<div class="check"><input id="pNew" type="checkbox"><label for="pNew">Show in New Arrivals</label></div>
+<div class="full actions"><button id="saveProduct" type="submit">Add Product</button><button id="cancelProduct" type="button" class="secondary hidden">Cancel Edit</button></div>
+</form><div id="productStatus" class="status"></div>
+</div>
+<div class="card"><h2>All Products</h2><div id="products" class="products"></div></div>
 </div>
 
-<div>
-<label>Product Name</label>
-<input id="name" required>
-</div>
-
-<div>
-<label>Price</label>
-<input id="price" placeholder="₹30,000" required>
-</div>
-
-<div>
-<label>Category</label>
-<input id="category" placeholder="Dining / Furniture / Home Décor" required>
-</div>
-
-<div class="full">
-<label>Short Description</label>
-<textarea id="description"></textarea>
-</div>
-
-<div>
-<label>Dimensions</label>
-<input id="dimensions" placeholder="Optional">
-</div>
-
-<div>
-<label>Material</label>
-<input id="material" placeholder="Optional">
-</div>
-
-<div class="full actions">
-<button type="submit">Add Product</button>
-<button type="reset" class="secondary">Clear</button>
-</div>
-
-</form>
-
-<div id="productStatus" class="status"></div>
-
-</div>
-
+<div id="sitePanel" class="panel">
 <div class="card">
-<h2>Products</h2>
-<div id="products" class="products"></div>
+<h2>Complete Website Settings</h2>
+<p class="note">All editable website text, navigation, hero, headings, About, Contact and Footer are controlled here.</p>
+<form id="siteForm" class="grid">
+<h3 class="full">Header &amp; Navigation</h3>
+<div><label>Brand Name</label><input id="sBrand"></div>
+<div><label>Home Menu Label</label><input id="sHomeNav"></div>
+<div><label>Furniture Menu Label</label><input id="sFurnitureNav"></div>
+<div><label>Home Décor Menu Label</label><input id="sDecorNav"></div>
+<div><label>New Arrivals Menu Label</label><input id="sNewNav"></div>
+<div><label>Contact Menu Label</label><input id="sContactNav"></div>
+
+<h3 class="full">Hero</h3>
+<div><label>Hero Eyebrow</label><input id="sHeroEyebrow"></div>
+<div><label>Hero Button</label><input id="sHeroButton"></div>
+<div class="full"><label>Hero Heading</label><input id="sHeroTitle"></div>
+<div class="full"><label>Hero Text</label><textarea id="sHeroText"></textarea></div>
+<div><label>Hero Image</label><input id="sHeroFile" type="file" accept="image/*"></div>
+<div><label>Hero Image URL (optional)</label><input id="sHeroUrl"></div>
+
+<h3 class="full">Section Headings</h3>
+<div><label>Category Section Heading</label><input id="sCategoryHeading"></div>
+<div><label>Featured Products Heading</label><input id="sFeaturedHeading"></div>
+<div><label>Furniture Collection Heading</label><input id="sFurnitureHeading"></div>
+<div><label>Home Décor Collection Heading</label><input id="sDecorHeading"></div>
+<div><label>New Arrivals Heading</label><input id="sNewHeading"></div>
+
+<h3 class="full">About</h3>
+<div><label>About Eyebrow</label><input id="sAboutEyebrow"></div>
+<div class="full"><label>About Heading</label><input id="sAboutTitle"></div>
+<div class="full"><label>About Text</label><textarea id="sAboutText"></textarea></div>
+
+<h3 class="full">Contact / Inquiry</h3>
+<div><label>Contact Eyebrow</label><input id="sContactEyebrow"></div>
+<div><label>Contact Heading</label><input id="sContactTitle"></div>
+<div class="full"><label>Contact Text</label><textarea id="sContactText"></textarea></div>
+<div><label>Phone</label><input id="sPhone"></div>
+<div><label>Email</label><input id="sEmail"></div>
+<div><label>WhatsApp</label><input id="sWhatsApp"></div>
+<div><label>Address</label><input id="sAddress"></div>
+
+<h3 class="full">Footer</h3>
+<div><label>Footer Brand</label><input id="sFooterBrand"></div>
+<div class="full"><label>Footer Text</label><input id="sFooterText"></div>
+<div class="full actions"><button type="submit">Save Entire Website Settings</button></div>
+</form><div id="siteStatus" class="status"></div>
+</div>
 </div>
 
+<div id="categoriesPanel" class="panel">
+<div class="card"><h2>Categories</h2>
+<form id="catForm" class="grid"><input id="catId" type="hidden">
+<div><label>Category Name</label><input id="catName" required></div><div><label>Subtitle</label><input id="catSubtitle"></div>
+<div><label>Target Section</label><select id="catTarget"><option value="furniture">Furniture</option><option value="decor">Home Décor</option><option value="new">New Arrivals</option><option value="featured">Featured Products</option></select></div>
+<div><label>Display Order</label><input id="catOrder" type="number" value="0"></div>
+<div class="full actions"><button type="submit" id="catSave">Add Category</button><button type="button" id="catCancel" class="secondary hidden">Cancel</button></div></form>
+<div id="catStatus" class="status"></div></div>
+<div class="card"><div id="catList" class="list"></div></div>
+</div>
+
+<div id="collectionsPanel" class="panel">
+<div class="card"><h2>Furniture / Home Décor Collections</h2>
+<form id="colForm" class="grid"><input id="colId" type="hidden">
+<div><label>Collection Type</label><select id="colType"><option value="furniture">Furniture</option><option value="decor">Home Décor</option></select></div>
+<div><label>Title</label><input id="colTitle" required></div><div class="full"><label>Description</label><textarea id="colDescription"></textarea></div>
+<div><label>Collection Image</label><input id="colFile" type="file" accept="image/*"></div><div><label>Image URL (optional)</label><input id="colUrl"></div>
+<div><label>Display Order</label><input id="colOrder" type="number" value="0"></div>
+<div class="full actions"><button type="submit" id="colSave">Add Collection</button><button type="button" id="colCancel" class="secondary hidden">Cancel</button></div></form>
+<div id="colStatus" class="status"></div></div>
+<div class="card"><div id="colList" class="list"></div></div>
+</div>
+
+<div id="inquiriesPanel" class="panel"><div class="card"><h2>Customer Inquiries</h2><div id="inqList" class="list"></div></div></div>
 </section>
-
 </div>
-
 
 <script type="module">
-
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js';
-
-import {
-getAuth,
-signInWithEmailAndPassword,
-onAuthStateChanged,
-signOut
-} from 'https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js';
-
-import {
-getFirestore,
-collection,
-addDoc,
-getDocs,
-deleteDoc,
-doc,
-serverTimestamp,
-query,
-orderBy
-} from 'https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js';
-
-import { firebaseConfig } from './firebase-config.js';
-
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
-
-const loginCard = document.getElementById('loginCard');
-const adminApp = document.getElementById('adminApp');
-const loginStatus = document.getElementById('loginStatus');
-const productStatus = document.getElementById('productStatus');
-
-
-document.getElementById('loginForm').addEventListener('submit', async e => {
-
-e.preventDefault();
-
-loginStatus.textContent = 'Logging in...';
-
-try {
-
-await signInWithEmailAndPassword(
-auth,
-document.getElementById('loginEmail').value,
-document.getElementById('loginPassword').value
-);
-
-loginStatus.textContent = '';
-
-} catch(err) {
-
-console.error('Firebase Login Error:', err);
-
-loginStatus.textContent =
-(err.code || 'ERROR') + ': ' + (err.message || 'Unknown error');
-
-}
-
-});
-
-
-document.getElementById('logoutBtn').onclick = () => signOut(auth);
-
-
-onAuthStateChanged(auth, user => {
-
-if(user){
-
-loginCard.classList.add('hidden');
-adminApp.classList.remove('hidden');
-loadProducts();
-
-}else{
-
-adminApp.classList.add('hidden');
-loginCard.classList.remove('hidden');
-
-}
-
-});
-
-
-async function loadProducts(){
-
-const box = document.getElementById('products');
-
-box.innerHTML = 'Loading...';
-
-try{
-
-const q = query(
-collection(db,'products'),
-orderBy('createdAt','desc')
-);
-
-const snap = await getDocs(q);
-
-box.innerHTML = '';
-
-if(snap.empty){
-
-box.innerHTML = '<p>No products added yet.</p>';
-return;
-
-}
-
-snap.forEach(d => {
-
-const p = d.data();
-
-const el = document.createElement('div');
-
-el.className = 'item';
-
-el.innerHTML = `
-<img src="${p.imageUrl}" alt="">
-<h3>${escapeHtml(p.name)}</h3>
-<p>${escapeHtml(p.category || '')}</p>
-<p><strong>${escapeHtml(p.price || '')}</strong></p>
-<button class="danger" data-id="${d.id}">Delete</button>
-`;
-
-el.querySelector('button').onclick =
-() => removeProduct(d.id);
-
-box.appendChild(el);
-
-});
-
-}catch(e){
-
-console.error(e);
-
-box.innerHTML =
-'<p>Could not load products. Check Firebase setup.</p>';
-
-}
-
-}
-
-
-async function removeProduct(id){
-
-if(!confirm('Delete this product?')) return;
-
-try{
-
-await deleteDoc(doc(db,'products',id));
-
-loadProducts();
-
-}catch(e){
-
-console.error(e);
-
-alert('Delete failed.');
-
-}
-
-}
-
-
-function compressImage(file,maxSide=900,quality=0.72){
-
-return new Promise((resolve,reject)=>{
-
-const reader = new FileReader();
-
-reader.onload = () => {
-
-const img = new Image();
-
-img.onload = () => {
-
-const scale =
-Math.min(
-1,
-maxSide / Math.max(img.width,img.height)
-);
-
-const w =
-Math.max(1,Math.round(img.width * scale));
-
-const h =
-Math.max(1,Math.round(img.height * scale));
-
-const canvas = document.createElement('canvas');
-
-canvas.width = w;
-canvas.height = h;
-
-const ctx = canvas.getContext('2d');
-
-ctx.drawImage(img,0,0,w,h);
-
-resolve(
-canvas.toDataURL('image/jpeg',quality)
-);
-
-};
-
-img.onerror = reject;
-
-img.src = reader.result;
-
-};
-
-reader.onerror = reject;
-
-reader.readAsDataURL(file);
-
-});
-
-}
-
-
-document.getElementById('productForm').addEventListener('submit',async e => {
-
-e.preventDefault();
-
-const file =
-document.getElementById('photo').files[0];
-
-if(!file) return;
-
-productStatus.textContent =
-'Preparing product image...';
-
-try{
-
-const imageUrl =
-await compressImage(file);
-
-if(imageUrl.length > 950000)
-throw new Error('Image too large after compression');
-
-await addDoc(
-collection(db,'products'),
-{
-name: document.getElementById('name').value.trim(),
-price: document.getElementById('price').value.trim(),
-category: document.getElementById('category').value.trim(),
-description: document.getElementById('description').value.trim(),
-dimensions: document.getElementById('dimensions').value.trim(),
-material: document.getElementById('material').value.trim(),
-imageUrl,
-createdAt: serverTimestamp()
-}
-);
-
-e.target.reset();
-
-productStatus.textContent =
-'Product added successfully.';
-
-loadProducts();
-
-}catch(err){
-
-console.error(err);
-
-productStatus.textContent =
-'Could not add product. Use a smaller image or check Firebase setup.';
-
-}
-
-});
-
-
-function escapeHtml(s){
-
-return String(s).replace(
-/[&<>'"]/g,
-c => ({
-'&':'&amp;',
-'<':'&lt;',
-'>':'&gt;',
-"'":'&#39;',
-'"':'&quot;'
-}[c])
-);
-
-}
-
+import{initializeApp}from'https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js';
+import{getAuth,signInWithEmailAndPassword,onAuthStateChanged,signOut}from'https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js';
+import{getFirestore,collection,getDocs,getDoc,addDoc,updateDoc,deleteDoc,doc,setDoc,serverTimestamp}from'https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js';
+import{firebaseConfig}from'./firebase-config.js';
+
+const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getFirestore(app),$=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+const status=(id,t)=>$(id).textContent=t;
+document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));b.classList.add('active');$(b.dataset.panel).classList.add('active')});
+$('loginForm').onsubmit=async e=>{e.preventDefault();status('loginStatus','Logging in...');try{await signInWithEmailAndPassword(auth,$('loginEmail').value,$('loginPassword').value);status('loginStatus','')}catch(e){status('loginStatus',(e.code||'ERROR')+': '+e.message)}};
+$('logoutBtn').onclick=()=>signOut(auth);
+
+async function img(file){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>{const i=new Image();i.onload=()=>{const s=Math.min(1,700/Math.max(i.width,i.height)),c=document.createElement('canvas');c.width=Math.max(1,Math.round(i.width*s));c.height=Math.max(1,Math.round(i.height*s));c.getContext('2d').drawImage(i,0,0,c.width,c.height);res(c.toDataURL('image/jpeg',.55))};i.onerror=rej;i.src=r.result};r.onerror=rej;r.readAsDataURL(file)})}
+async function multiImages(files){const a=[];for(const f of files)a.push(await img(f));return a}
+function resetP(){$('productForm').reset();$('productId').value='';$('existingImages').innerHTML='';$('productTitle').textContent='Add Product';$('saveProduct').textContent='Add Product';$('cancelProduct').classList.add('hidden');$('pOrder').value=0}
+$('cancelProduct').onclick=resetP;
+
+async function loadProducts(){const s=await getDocs(collection(db,'products'));const a=s.docs.map(d=>({id:d.id,...d.data()})).sort((x,y)=>(x.order||0)-(y.order||0));$('products').innerHTML=a.length?a.map(p=>{const ims=p.imageUrls?.length?p.imageUrls:(p.imageUrl?[p.imageUrl]:[]);return`<div class="item"><img src="${esc(ims[0]||'')}" alt=""><h3>${esc(p.name)}</h3><div class="small">${esc(p.category)} · ${esc(p.price)}</div><div class="thumbs">${ims.slice(0,7).map(x=>`<img class="thumb" src="${esc(x)}">`).join('')}</div>${p.featured?'<span class="small">Featured</span> ':''}${p.newArrival?'<span class="small">New Arrival</span>':''}<div class="actions"><button data-edit="${p.id}">Edit</button><button class="danger" data-delete="${p.id}">Delete</button></div></div>`}).join(''):'<p>No products yet.</p>';a.forEach(p=>{$(`[data-edit="${p.id}"]`).onclick=()=>editP(p);$(`[data-delete="${p.id}"]`).onclick=async()=>{if(confirm('Delete this product?')){await deleteDoc(doc(db,'products',p.id));loadProducts()}}})}
+function editP(p){$('productId').value=p.id;$('pName').value=p.name||'';$('pPrice').value=p.price||'';$('pCategory').value=p.category||'';$('pDescription').value=p.description||'';$('pDimensions').value=p.dimensions||'';$('pMaterial').value=p.material||'';$('pOrder').value=p.order||0;$('pFeatured').checked=!!p.featured;$('pNew').checked=!!p.newArrival;const ims=p.imageUrls?.length?p.imageUrls:(p.imageUrl?[p.imageUrl]:[]);$('existingImages').innerHTML=ims.map(x=>`<img class="thumb" src="${esc(x)}">`).join('');$('productTitle').textContent='Edit Product';$('saveProduct').textContent='Save Product Changes';$('cancelProduct').classList.remove('hidden');window.scrollTo({top:0,behavior:'smooth'})}
+$('productForm').onsubmit=async e=>{e.preventDefault();status('productStatus','Saving...');try{const id=$('productId').value,old=id?(await getDoc(doc(db,'products',id))).data():null;let ims=old?.imageUrls||(old?.imageUrl?[old.imageUrl]:[]);if($('photos').files.length)ims=await multiImages([...$('photos').files]);if(!ims.length)throw new Error('Please upload at least one product image.');const data={name:$('pName').value.trim(),price:$('pPrice').value.trim(),category:$('pCategory').value.trim(),description:$('pDescription').value.trim(),dimensions:$('pDimensions').value.trim(),material:$('pMaterial').value.trim(),imageUrls:ims,imageUrl:ims[0],order:Number($('pOrder').value)||0,featured:$('pFeatured').checked,newArrival:$('pNew').checked,updatedAt:serverTimestamp()};if(id)await updateDoc(doc(db,'products',id),data);else{data.createdAt=serverTimestamp();await addDoc(collection(db,'products'),data)}resetP();status('productStatus','Product saved.');loadProducts()}catch(e){status('productStatus','Save failed: '+e.message)}};
+
+const siteFields={sBrand:'brandName',sHomeNav:'homeNav',sFurnitureNav:'furnitureNav',sDecorNav:'decorNav',sNewNav:'newNav',sContactNav:'contactNav',sHeroEyebrow:'heroEyebrow',sHeroButton:'heroButton',sHeroTitle:'heroTitle',sHeroText:'heroText',sHeroUrl:'heroImageUrl',sCategoryHeading:'categoryHeading',sFeaturedHeading:'featuredHeading',sFurnitureHeading:'furnitureHeading',sDecorHeading:'decorHeading',sNewHeading:'newHeading',sAboutEyebrow:'aboutEyebrow',sAboutTitle:'aboutTitle',sAboutText:'aboutText',sContactEyebrow:'contactEyebrow',sContactTitle:'contactTitle',sContactText:'contactText',sPhone:'phone',sEmail:'email',sWhatsApp:'whatsapp',sAddress:'address',sFooterBrand:'footerBrand',sFooterText:'footerText'};
+async function loadSite(){const s=await getDoc(doc(db,'siteContent','site'));const p=s.exists()?s.data():{};for(const[id,k]of Object.entries(siteFields))$(id).value=p[k]||''}
+$('siteForm').onsubmit=async e=>{e.preventDefault();status('siteStatus','Saving...');try{const data={};for(const[id,k]of Object.entries(siteFields))data[k]=$(id).value.trim();if($('sHeroFile').files[0])data.heroImageUrl=await img($('sHeroFile').files[0]);data.updatedAt=serverTimestamp();await setDoc(doc(db,'siteContent','site'),data,{merge:true});status('siteStatus','Entire website settings saved.')}catch(e){status('siteStatus','Save failed: '+e.message)}};
+
+async function loadCats(){const s=await getDocs(collection(db,'categories'));const a=s.docs.map(d=>({id:d.id,...d.data()}));$('catList').innerHTML=a.map(c=>`<div class="row"><div class="rowhead"><div><h3>${esc(c.name)}</h3><div class="small">${esc(c.subtitle||'')}</div></div><div><button data-ce="${c.id}">Edit</button> <button class="danger" data-cd="${c.id}">Delete</button></div></div></div>`).join('')||'<p>No categories.</p>';a.forEach(c=>{$(`[data-ce="${c.id}"]`).onclick=()=>{$('catId').value=c.id;$('catName').value=c.name||'';$('catSubtitle').value=c.subtitle||'';$('catTarget').value=c.target||'furniture';$('catOrder').value=c.order||0;$('catSave').textContent='Save Changes';$('catCancel').classList.remove('hidden')};$(`[data-cd="${c.id}"]`).onclick=async()=>{if(confirm('Delete category?')){await deleteDoc(doc(db,'categories',c.id));loadCats()}}})}
+$('catForm').onsubmit=async e=>{e.preventDefault();const id=$('catId').value,d={name:$('catName').value.trim(),subtitle:$('catSubtitle').value.trim(),target:$('catTarget').value,order:Number($('catOrder').value)||0,updatedAt:serverTimestamp()};if(id)await updateDoc(doc(db,'categories',id),d);else{d.createdAt=serverTimestamp();await addDoc(collection(db,'categories'),d)}$('catForm').reset();$('catId').value='';$('catSave').textContent='Add Category';$('catCancel').classList.add('hidden');loadCats()};$('catCancel').onclick=()=>{$('catForm').reset();$('catId').value='';$('catSave').textContent='Add Category';$('catCancel').classList.add('hidden')};
+
+async function loadCols(){const s=await getDocs(collection(db,'collections'));const a=s.docs.map(d=>({id:d.id,...d.data()}));$('colList').innerHTML=a.map(c=>`<div class="row"><div class="rowhead"><div><h3>${esc(c.title)}</h3><div class="small">${esc(c.type)} · ${esc(c.description||'')}</div>${c.imageUrl?`<img class="thumb" src="${esc(c.imageUrl)}">`:''}</div><div><button data-ce="${c.id}">Edit</button> <button class="danger" data-cd="${c.id}">Delete</button></div></div></div>`).join('')||'<p>No collections.</p>';a.forEach(c=>{$(`[data-ce="${c.id}"]`).onclick=()=>{$('colId').value=c.id;$('colType').value=c.type||'furniture';$('colTitle').value=c.title||'';$('colDescription').value=c.description||'';$('colUrl').value=c.imageUrl||'';$('colOrder').value=c.order||0;$('colSave').textContent='Save Changes';$('colCancel').classList.remove('hidden')};$(`[data-cd="${c.id}"]`).onclick=async()=>{if(confirm('Delete collection?')){await deleteDoc(doc(db,'collections',c.id));loadCols()}}})}
+$('colForm').onsubmit=async e=>{e.preventDefault();const id=$('colId').value,old=id?(await getDoc(doc(db,'collections',id))).data():null;let image=$('colUrl').value.trim()||old?.imageUrl||'';if($('colFile').files[0])image=await img($('colFile').files[0]);const d={type:$('colType').value,title:$('colTitle').value.trim(),description:$('colDescription').value.trim(),imageUrl:image,order:Number($('colOrder').value)||0,updatedAt:serverTimestamp()};if(id)await updateDoc(doc(db,'collections',id),d);else{d.createdAt=serverTimestamp();await addDoc(collection(db,'collections'),d)}$('colForm').reset();$('colId').value='';$('colSave').textContent='Add Collection';$('colCancel').classList.add('hidden');loadCols()};$('colCancel').onclick=()=>{$('colForm').reset();$('colId').value='';$('colSave').textContent='Add Collection';$('colCancel').classList.add('hidden')};
+
+async function loadInq(){const s=await getDocs(collection(db,'inquiries'));const a=s.docs.map(d=>({id:d.id,...d.data()}));$('inqList').innerHTML=a.map(i=>`<div class="row"><h3>${esc(i.name||'')}</h3><div>${esc(i.phone||'')}</div><p>${esc(i.message||'')}</p><div class="small">${esc(i.status||'New')}</div><div class="actions"><button data-res="${i.id}">Mark Resolved</button><button class="danger" data-del="${i.id}">Delete</button></div></div>`).join('')||'<p>No inquiries.</p>';a.forEach(i=>{$(`[data-res="${i.id}"]`).onclick=async()=>{await updateDoc(doc(db,'inquiries',i.id),{status:'Resolved',updatedAt:serverTimestamp()});loadInq()};$(`[data-del="${i.id}"]`).onclick=async()=>{if(confirm('Delete inquiry?')){await deleteDoc(doc(db,'inquiries',i.id));loadInq()}}})}
+onAuthStateChanged(auth,u=>{if(u){$('loginCard').classList.add('hidden');$('adminApp').classList.remove('hidden');loadProducts();loadSite();loadCats();loadCols();loadInq()}else{$('adminApp').classList.add('hidden');$('loginCard').classList.remove('hidden')}});
 </script>
-
 </body>
 </html>
