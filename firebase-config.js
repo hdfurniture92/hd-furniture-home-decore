@@ -1,5 +1,5 @@
 export const firebaseConfig = {
-  apiKey: "YAHAN_APNI_NAYI_API_KEY_PASTE_KARO",
+  apiKey: "AIzaSyDaLlbHpOh9EOTs_UQySdQsCH7t1PBpmPo",
   authDomain: "hd-furniture-home-decore.firebaseapp.com",
   projectId: "hd-furniture-home-decore",
   storageBucket: "hd-furniture-home-decore.firebasestorage.app",
