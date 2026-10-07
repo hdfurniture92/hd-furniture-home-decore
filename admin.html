@@ -5,6 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>HD Furniture — Complete Admin</title>
 <style>
+.imageViewer{position:fixed;inset:0;background:rgba(0,0,0,.78);display:none;align-items:center;justify-content:center;z-index:9999;padding:30px}
+.imageViewer.show{display:flex}.imageViewer img{max-width:92vw;max-height:88vh;object-fit:contain;background:#fff;border-radius:4px}
+.viewerClose,.viewerPrev,.viewerNext{position:absolute;background:#fff;color:#333;border:0;border-radius:50%;padding:0}
+.viewerClose{top:18px;right:24px;width:42px;height:42px;font-size:25px}.viewerPrev,.viewerNext{top:50%;transform:translateY(-50%);width:46px;height:46px;font-size:28px}
+.viewerPrev{left:20px}.viewerNext{right:20px}
 .imgclick{cursor:pointer}.imgclick:hover{opacity:.85}
 :root{--walnut:#5a3825;--dark:#3d2519;--cream:#fbf7ef;--white:#fffdf9;--muted:#76685b;--line:#dfd1bd}
 *{box-sizing:border-box}body{margin:0;background:var(--cream);color:#2e241d;font-family:Arial,sans-serif}
@@ -146,13 +151,28 @@ textarea{min-height:100px;resize:vertical}.actions{display:flex;gap:9px;flex-wra
 </section>
 </div>
 
+<div id="imageViewer" class="imageViewer">
+<button type="button" class="viewerClose" id="viewerClose">×</button>
+<button type="button" class="viewerPrev" id="viewerPrev">‹</button>
+<img id="viewerImage" src="" alt="Product image">
+<button type="button" class="viewerNext" id="viewerNext">›</button>
+</div>
 <script type="module">
 import{initializeApp}from'https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js';
 import{getAuth,signInWithEmailAndPassword,onAuthStateChanged,signOut}from'https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js';
 import{getFirestore,collection,getDocs,getDoc,addDoc,updateDoc,deleteDoc,doc,setDoc,serverTimestamp}from'https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js';
 import{firebaseConfig}from'./firebase-config.js';
 
-const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getFirestore(app),$=id=>document.getElementById(id);
+const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getFirestore(app),$=id=>document.getElementById(id);const imageViewer=$('imageViewer'),viewerImage=$('viewerImage');
+let viewerImages=[],viewerIndex=0;
+function openProductImage(src){viewerImages=[src];viewerIndex=0;viewerImage.src=src;imageViewer.classList.add('show')}
+function closeProductImage(){imageViewer.classList.remove('show');viewerImage.src=''}
+$('viewerClose').onclick=closeProductImage;
+$('viewerPrev').onclick=()=>{};
+$('viewerNext').onclick=()=>{};
+imageViewer.onclick=e=>{if(e.target===imageViewer)closeProductImage()};
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeProductImage()});
+
 const esc=s=>String(s??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
 const status=(id,t)=>$(id).textContent=t;
 document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));b.classList.add('active');$(b.dataset.panel).classList.add('active')});
@@ -164,8 +184,8 @@ async function multiImages(files){const a=[];for(const f of files)a.push(await i
 function resetP(){$('productForm').reset();$('productId').value='';$('existingImages').innerHTML='';$('productTitle').textContent='Add Product';$('saveProduct').textContent='Add Product';$('cancelProduct').classList.add('hidden');$('pOrder').value=0}
 $('cancelProduct').onclick=resetP;
 
-async function loadProducts(){const s=await getDocs(collection(db,'products'));const a=s.docs.map(d=>({id:d.id,...d.data()})).sort((x,y)=>(x.order||0)-(y.order||0));$('products').innerHTML=a.length?a.map(p=>{const ims=p.imageUrls?.length?p.imageUrls:(p.imageUrl?[p.imageUrl]:[]);return`<div class="item"><img class="imgclick" src="${esc(ims[0]||'')}" alt="" title="Click to open image" onclick="window.open(this.src, '_blank')"><h3>${esc(p.name)}</h3><div class="small">${esc(p.category)} · ${esc(p.price)}</div><div class="thumbs">${ims.slice(0,7).map(x=>`<img class="thumb imgclick" src="${esc(x)}" title="Click to open image" onclick="window.open(this.src, '_blank')">`).join('')}</div>${p.featured?'<span class="small">Featured</span> ':''}${p.newArrival?'<span class="small">New Arrival</span>':''}<div class="actions"><button data-edit="${p.id}">Edit</button><button class="danger" data-delete="${p.id}">Delete</button></div></div>`}).join(''):'<p>No products yet.</p>';a.forEach(p=>{$(`[data-edit="${p.id}"]`).onclick=()=>editP(p);$(`[data-delete="${p.id}"]`).onclick=async()=>{if(confirm('Delete this product?')){await deleteDoc(doc(db,'products',p.id));loadProducts()}}})}
-function editP(p){$('productId').value=p.id;$('pName').value=p.name||'';$('pPrice').value=p.price||'';$('pCategory').value=p.category||'';$('pDescription').value=p.description||'';$('pDimensions').value=p.dimensions||'';$('pMaterial').value=p.material||'';$('pOrder').value=p.order||0;$('pFeatured').checked=!!p.featured;$('pNew').checked=!!p.newArrival;const ims=p.imageUrls?.length?p.imageUrls:(p.imageUrl?[p.imageUrl]:[]);$('existingImages').innerHTML=ims.map(x=>`<img class="thumb imgclick" src="${esc(x)}" title="Click to open image" onclick="window.open(this.src, '_blank')">`).join('');$('productTitle').textContent='Edit Product';$('saveProduct').textContent='Save Product Changes';$('cancelProduct').classList.remove('hidden');window.scrollTo({top:0,behavior:'smooth'})}
+async function loadProducts(){const s=await getDocs(collection(db,'products'));const a=s.docs.map(d=>({id:d.id,...d.data()})).sort((x,y)=>(x.order||0)-(y.order||0));$('products').innerHTML=a.length?a.map(p=>{const ims=p.imageUrls?.length?p.imageUrls:(p.imageUrl?[p.imageUrl]:[]);return`<div class="item"><img class="imgclick" src="${esc(ims[0]||'')}" alt="" title="Click to open image" onclick="openProductImage(this.src)"><h3>${esc(p.name)}</h3><div class="small">${esc(p.category)} · ${esc(p.price)}</div><div class="thumbs">${ims.slice(0,7).map(x=>`<img class="thumb imgclick" src="${esc(x)}" title="Click to open image" onclick="openProductImage(this.src)">`).join('')}</div>${p.featured?'<span class="small">Featured</span> ':''}${p.newArrival?'<span class="small">New Arrival</span>':''}<div class="actions"><button data-edit="${p.id}">Edit</button><button class="danger" data-delete="${p.id}">Delete</button></div></div>`}).join(''):'<p>No products yet.</p>';a.forEach(p=>{$(`[data-edit="${p.id}"]`).onclick=()=>editP(p);$(`[data-delete="${p.id}"]`).onclick=async()=>{if(confirm('Delete this product?')){await deleteDoc(doc(db,'products',p.id));loadProducts()}}})}
+function editP(p){$('productId').value=p.id;$('pName').value=p.name||'';$('pPrice').value=p.price||'';$('pCategory').value=p.category||'';$('pDescription').value=p.description||'';$('pDimensions').value=p.dimensions||'';$('pMaterial').value=p.material||'';$('pOrder').value=p.order||0;$('pFeatured').checked=!!p.featured;$('pNew').checked=!!p.newArrival;const ims=p.imageUrls?.length?p.imageUrls:(p.imageUrl?[p.imageUrl]:[]);$('existingImages').innerHTML=ims.map(x=>`<img class="thumb imgclick" src="${esc(x)}" title="Click to open image" onclick="openProductImage(this.src)">`).join('');$('productTitle').textContent='Edit Product';$('saveProduct').textContent='Save Product Changes';$('cancelProduct').classList.remove('hidden');window.scrollTo({top:0,behavior:'smooth'})}
 $('productForm').onsubmit=async e=>{e.preventDefault();status('productStatus','Saving...');try{const id=$('productId').value,old=id?(await getDoc(doc(db,'products',id))).data():null;let ims=old?.imageUrls||(old?.imageUrl?[old.imageUrl]:[]);if($('photos').files.length)ims=await multiImages([...$('photos').files]);if(!ims.length)throw new Error('Please upload at least one product image.');const data={name:$('pName').value.trim(),price:$('pPrice').value.trim(),category:$('pCategory').value.trim(),description:$('pDescription').value.trim(),dimensions:$('pDimensions').value.trim(),material:$('pMaterial').value.trim(),imageUrls:ims,imageUrl:ims[0],order:Number($('pOrder').value)||0,featured:$('pFeatured').checked,newArrival:$('pNew').checked,updatedAt:serverTimestamp()};if(id)await updateDoc(doc(db,'products',id),data);else{data.createdAt=serverTimestamp();await addDoc(collection(db,'products'),data)}resetP();status('productStatus','Product saved.');loadProducts()}catch(e){status('productStatus','Save failed: '+e.message)}};
 
 const siteFields={sBrand:'brandName',sHomeNav:'homeNav',sFurnitureNav:'furnitureNav',sDecorNav:'decorNav',sNewNav:'newNav',sContactNav:'contactNav',sHeroEyebrow:'heroEyebrow',sHeroButton:'heroButton',sHeroTitle:'heroTitle',sHeroText:'heroText',sHeroUrl:'heroImageUrl',sCategoryHeading:'categoryHeading',sFeaturedHeading:'featuredHeading',sFurnitureHeading:'furnitureHeading',sDecorHeading:'decorHeading',sNewHeading:'newHeading',sAboutEyebrow:'aboutEyebrow',sAboutTitle:'aboutTitle',sAboutText:'aboutText',sContactEyebrow:'contactEyebrow',sContactTitle:'contactTitle',sContactText:'contactText',sPhone:'phone',sEmail:'email',sWhatsApp:'whatsapp',sAddress:'address',sFooterBrand:'footerBrand',sFooterText:'footerText'};
