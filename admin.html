@@ -64,7 +64,7 @@ input,textarea,select{width:100%;padding:11px;border:1px solid #d8c8b4;backgroun
 <div class="full"><label>Product Images — multiple allowed</label><input id="photo" type="file" accept="image/*" multiple><div id="existingImages" class="editThumbs"></div><div class="note">First image is the main product image. When editing, selecting new images replaces the existing image set.</div></div>
 <div><label>Product Name</label><input id="name" required></div>
 <div><label>Price</label><input id="price" placeholder="₹30,000" required></div>
-<div><label>Category</label><input id="category" required></div>
+<div><label>Category</label><select id="category" required><option value="">Select Category</option></select></div>
 <div class="full"><label>Short Description</label><textarea id="description"></textarea></div>
 <div><label>Dimensions</label><input id="dimensions"></div>
 <div><label>Material</label><input id="material"></div>
@@ -210,6 +210,7 @@ async function editProduct(id,p){
  $('productId').value=id;$('name').value=p.name||'';$('price').value=p.price||'';$('category').value=p.category||'';
  $('description').value=p.description||'';$('dimensions').value=p.dimensions||'';$('material').value=p.material||'';
  $('productOrder').value=p.order||0;$('featured').checked=!!p.featured;$('newArrival').checked=!!p.newArrival;
+ loadProductCategories(p.category||'');
  $('productFormTitle').textContent='Edit Product';$('saveProductBtn').textContent='Save Changes';$('cancelProduct').classList.remove('hidden');
  showExistingImages(productImages(p));window.scrollTo({top:0,behavior:'smooth'});
 }
@@ -218,6 +219,17 @@ async function deleteProduct(id){
  try{await deleteDoc(doc(db,'products',id));setStatus('productStatus','Product deleted.');await loadProducts();}
  catch(e){setStatus('productStatus','Delete failed: '+(e.message||e));}
 }
+async function loadProductCategories(selected=""){
+ try{
+  const s=await getDocs(collection(db,'categories'));
+  const a=s.docs.map(d=>({id:d.id,...d.data()})).sort((x,y)=>(x.order||0)-(y.order||0));
+  const el=$('category');
+  if(!el)return;
+  el.innerHTML='<option value="">Select Category</option>'+a.map(c=>`<option value="${esc(c.name)}">${esc(c.name)}</option>`).join('');
+  if(selected)el.value=selected;
+ }catch(err){setStatus('productStatus','Category load failed: '+(err.message||err));}
+}
+
 async function loadProducts(){
  const box=$('products');box.innerHTML='Loading...';
  try{
@@ -335,7 +347,7 @@ $('aboutForm').onsubmit=async e=>{e.preventDefault();setStatus('aboutStatus','Sa
 async function loadInquiries(){try{const s=await getDocs(collection(db,'inquiries'));const a=s.docs.map(d=>({id:d.id,...d.data()})).sort((x,y)=>(y.createdAt?.seconds||0)-(x.createdAt?.seconds||0));$('inquiries').innerHTML=a.map(i=>`<div class="inquiry"><strong>${esc(i.name||'')}</strong><div>${esc(i.phone||'')}</div><div>${esc(i.message||'')}</div><div class="small">${esc(i.status||'New')}</div><div class="actions"><button type="button" data-is="${esc(i.id)}">Mark Resolved</button><button type="button" class="danger" data-idel="${esc(i.id)}">Delete</button></div></div>`).join('')||'<p>No inquiries yet.</p>';}catch(err){$('inquiries').innerHTML='<p>Could not load inquiries.</p>';}}
 $('inquiries').onclick=async e=>{const res=e.target.closest('button[data-is]');const del=e.target.closest('button[data-idel]');if(res){const id=res.getAttribute('data-is');res.disabled=true;res.textContent='Saving...';try{await updateDoc(doc(db,'inquiries',id),{status:'Resolved',updatedAt:serverTimestamp()});await loadInquiries();}catch(err){res.disabled=false;res.textContent='Mark Resolved';alert('Update failed: '+(err.message||err));}}else if(del){const id=del.getAttribute('data-idel');if(!confirm('Delete this inquiry?'))return;try{await deleteDoc(doc(db,'inquiries',id));await loadInquiries();}catch(err){alert('Delete failed: '+(err.message||err));}}};
 
-onAuthStateChanged(auth,user=>{if(user){$('loginCard').classList.add('hidden');$('adminApp').classList.remove('hidden');loadProducts();loadHome();loadCategories();loadCollections();loadAbout();loadInquiries()}else{$('adminApp').classList.add('hidden');$('loginCard').classList.remove('hidden')}});
+onAuthStateChanged(auth,user=>{if(user){$('loginCard').classList.add('hidden');$('adminApp').classList.remove('hidden');loadProductCategories();loadProducts();loadHome();loadCategories();loadCollections();loadAbout();loadInquiries()}else{$('adminApp').classList.add('hidden');$('loginCard').classList.remove('hidden')}});
 </script>
 </body>
 </html>
