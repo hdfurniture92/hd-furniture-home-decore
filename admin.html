@@ -3,203 +3,328 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HD Furniture — Complete Admin</title>
+<title>HD Furniture — Admin</title>
 <style>
-.imageViewer{position:fixed;inset:0;background:rgba(0,0,0,.78);display:none;align-items:center;justify-content:center;z-index:9999;padding:30px}
-.imageViewer.show{display:flex}.imageViewer img{max-width:92vw;max-height:88vh;object-fit:contain;background:#fff;border-radius:4px}
-.viewerClose,.viewerPrev,.viewerNext{position:absolute;background:#fff;color:#333;border:0;border-radius:50%;padding:0}
-.viewerClose{top:18px;right:24px;width:42px;height:42px;font-size:25px}.viewerPrev,.viewerNext{top:50%;transform:translateY(-50%);width:46px;height:46px;font-size:28px}
-.viewerPrev{left:20px}.viewerNext{right:20px}
-.imgclick{cursor:pointer}.imgclick:hover{opacity:.85}
-:root{--walnut:#5a3825;--dark:#3d2519;--cream:#fbf7ef;--white:#fffdf9;--muted:#76685b;--line:#dfd1bd}
-*{box-sizing:border-box}body{margin:0;background:var(--cream);color:#2e241d;font-family:Arial,sans-serif}
-.wrap{max-width:1200px;margin:auto;padding:24px 18px 60px}.top{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:20px}
-.brand{font:700 24px Georgia,serif;color:var(--dark)}button{border:0;background:var(--walnut);color:#fff;padding:11px 16px;border-radius:4px;font-weight:700;cursor:pointer}
-button.secondary{background:#e7dac8;color:var(--dark)}button.danger{background:#8d2f2f}.hidden{display:none!important}
-.card{background:var(--white);border:1px solid var(--line);padding:22px;margin-bottom:18px;border-radius:6px}.login{max-width:430px;margin:12vh auto}
-.tabs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:18px}.tab{background:#e7dac8;color:var(--dark)}.tab.active{background:var(--walnut);color:#fff}
-.panel{display:none}.panel.active{display:block}.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.full{grid-column:1/-1}label{display:block;font-size:13px;font-weight:700;margin-bottom:6px}
-input,textarea,select{width:100%;padding:11px;border:1px solid #d8c8b4;background:#fffdfa;border-radius:3px;font:14px Arial,sans-serif}
-textarea{min-height:100px;resize:vertical}.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:15px}.status{margin-top:10px;color:var(--muted);font-size:14px}
-.note{background:#f5eadc;border-left:4px solid var(--walnut);padding:12px;font-size:13px;line-height:1.5}
-.products{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}.item,.row{border:1px solid var(--line);background:#fff;padding:13px;border-radius:4px}
-.item img{width:100%;aspect-ratio:1;object-fit:cover}.thumbs{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}.thumb{width:65px;height:65px;object-fit:cover;border:1px solid var(--line)}
-.rowhead{display:flex;justify-content:space-between;gap:15px;align-items:center}.row h3{font:700 20px Georgia,serif;color:var(--dark);margin:0}
-.list{display:grid;gap:12px}.check{display:flex;gap:8px;align-items:center}.check input{width:auto}.small{font-size:12px;color:var(--muted)}
-@media(max-width:800px){.grid,.products{grid-template-columns:1fr}.top{flex-direction:column;align-items:flex-start}}
-</style>
+:root{--walnut:#5a3825;--dark:#3d2519;--beige:#f3eadb;--cream:#fbf7ef;--white:#fffdf9;--muted:#76685b;--line:#dfd1bd}
+*{box-sizing:border-box}body{margin:0;background:var(--cream);color:#2e241d;font-family:Arial,sans-serif}.wrap{max-width:1180px;margin:auto;padding:28px 18px 60px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:25px}.brand{font-family:Georgia,serif;font-size:24px;font-weight:700;color:var(--dark)}
+button{border:0;background:var(--walnut);color:#fff;padding:11px 16px;border-radius:4px;font-weight:700;cursor:pointer}button.secondary{background:#e7dac8;color:var(--dark)}button.danger{background:#8d2f2f}.card{background:var(--white);border:1px solid var(--line);padding:24px;margin-bottom:20px;border-radius:6px}.hidden{display:none}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}.tab{background:#e7dac8;color:var(--dark)}.tab.active{background:var(--walnut);color:#fff}
+.panel{display:none}.panel.active{display:block}.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}label{display:block;font-size:13px;font-weight:700;margin-bottom:6px}
+input,textarea,select{width:100%;padding:11px;border:1px solid #d8c8b4;background:#fffdfa;border-radius:3px;font:14px Arial,sans-serif}textarea{min-height:105px;resize:vertical}.full{grid-column:1/-1}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}.status{margin-top:12px;font-size:14px;color:var(--muted)}.check{display:flex;align-items:center;gap:8px;font-size:14px}.check input{width:auto}
+.list{display:grid;gap:12px}.row{border:1px solid var(--line);background:#fff;padding:15px;border-radius:4px}.row-head{display:flex;justify-content:space-between;align-items:center;gap:10px}.row h3{font-family:Georgia,serif;margin:0;color:var(--dark)}.muted{color:var(--muted);font-size:13px}
+.products{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}.item{border:1px solid var(--line);background:#fff;padding:12px}.item img{width:100%;aspect-ratio:1;object-fit:cover;display:block;background:#f5f5f5}.item h3{font-family:Georgia,serif;margin:10px 0 3px;font-size:18px}.item p{margin:3px 0;color:var(--muted);font-size:13px}
+.badge{display:inline-block;padding:4px 7px;background:#eee1d0;border-radius:3px;font-size:11px;margin:3px 3px 0 0}.thumb{width:100px;height:70px;object-fit:cover;border:1px solid var(--line);margin-top:8px}
+.login{max-width:430px;margin:12vh auto}.note{background:#f5eadc;padding:12px;border-left:4px solid var(--walnut);font-size:13px;line-height:1.6}
+.inquiry{border:1px solid var(--line);padding:14px;background:#fff}.inquiry strong{color:var(--dark)}.small{font-size:12px;color:var(--muted)}
+@media(max-width:800px){.grid,.products{grid-template-columns:1fr}.top{align-items:flex-start;flex-direction:column}}
+
+.imageViewer{position:fixed;inset:0;background:rgba(0,0,0,.82);display:none;align-items:center;justify-content:center;z-index:99999;padding:24px}
+.imageViewer.show{display:flex}
+.viewerBox{position:relative;max-width:94vw;max-height:94vh;background:#fff;padding:12px;border-radius:6px;display:flex;flex-direction:column;align-items:center}
+.viewerBox img{max-width:88vw;max-height:76vh;object-fit:contain}
+.viewerClose,.viewerPrev,.viewerNext{position:absolute;border:0;background:#fff;color:#333;border-radius:50%;width:44px;height:44px;font-size:28px;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.25);z-index:2}
+.viewerClose{right:-18px;top:-18px}.viewerPrev{left:12px;top:50%;transform:translateY(-50%)}.viewerNext{right:12px;top:50%;transform:translateY(-50%)}
+.viewerThumbs{display:flex;gap:7px;overflow:auto;max-width:88vw;padding-top:10px}.viewerThumb{width:60px;height:60px;object-fit:cover;border:2px solid #ddd;cursor:pointer}.viewerThumb.active{border-color:var(--walnut)}
+.productImage{cursor:pointer}.productImage:hover{opacity:.88}
+.editThumbs{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}.editThumb{width:82px;height:82px;object-fit:cover;border:1px solid #ddd;border-radius:4px}
+
 </head>
 <body>
 <div class="wrap">
-
 <section id="loginCard" class="card login">
-<div class="brand">HD FURNITURE &amp; HOME DECORE</div><h2>Admin Login</h2>
-<p class="note">Only the authorized Firebase account can manage the website.</p>
-<form id="loginForm"><p><label>Email</label><input id="loginEmail" type="email" required></p>
+<div class="brand">HD FURNITURE &amp; HOME DECORE</div>
+<h2>Admin Login</h2>
+<p class="note">Only the authorized Firebase account can manage this website.</p>
+<form id="loginForm">
+<p><label>Email</label><input id="loginEmail" type="email" required></p>
 <p><label>Password</label><input id="loginPassword" type="password" required></p>
-<button type="submit">Login</button><div id="loginStatus" class="status"></div></form>
+<button type="submit">Login</button>
+<div id="loginStatus" class="status"></div>
+</form>
 </section>
 
 <section id="adminApp" class="hidden">
 <div class="top"><div class="brand">HD FURNITURE &amp; HOME DECORE — Admin</div><button id="logoutBtn" class="secondary">Logout</button></div>
 
 <div class="tabs">
-<button class="tab active" data-panel="productsPanel">Products</button>
-<button class="tab" data-panel="sitePanel">Entire Website</button>
-<button class="tab" data-panel="categoriesPanel">Categories</button>
-<button class="tab" data-panel="collectionsPanel">Collections</button>
-<button class="tab" data-panel="inquiriesPanel">Inquiries</button>
+<button class="tab active" data-tab="productsPanel">Products</button>
+<button class="tab" data-tab="homePanel">Homepage</button>
+<button class="tab" data-tab="categoriesPanel">Categories</button>
+<button class="tab" data-tab="collectionsPanel">Collections</button>
+<button class="tab" data-tab="aboutPanel">About / Contact</button>
+<button class="tab" data-tab="inquiriesPanel">Inquiries</button>
 </div>
 
 <div id="productsPanel" class="panel active">
 <div class="card">
-<h2 id="productTitle">Add Product</h2>
-<p class="note">You can upload multiple product images. The first image is the main product image. Existing product images can also be replaced/edited.</p>
+<h2 id="productFormTitle">Add Product</h2>
 <form id="productForm" class="grid">
 <input id="productId" type="hidden">
-<div class="full"><label>Product Images — multiple allowed</label><input id="photos" type="file" accept="image/*" multiple><div id="existingImages" class="thumbs"></div></div>
-<div><label>Product Name</label><input id="pName" required></div>
-<div><label>Price</label><input id="pPrice" required></div>
-<div><label>Category</label><input id="pCategory" required></div>
-<div><label>Display Order</label><input id="pOrder" type="number" value="0"></div>
-<div class="full"><label>Short Description</label><textarea id="pDescription"></textarea></div>
-<div><label>Dimensions</label><input id="pDimensions"></div>
-<div><label>Material</label><input id="pMaterial"></div>
-<div class="check"><input id="pFeatured" type="checkbox"><label for="pFeatured">Show in Featured Products</label></div>
-<div class="check"><input id="pNew" type="checkbox"><label for="pNew">Show in New Arrivals</label></div>
-<div class="full actions"><button id="saveProduct" type="submit">Add Product</button><button id="cancelProduct" type="button" class="secondary hidden">Cancel Edit</button></div>
-</form><div id="productStatus" class="status"></div>
+<div><label>Product Photo</label><input id="photo" type="file" accept="image/*"></div>
+<div><label>Product Name</label><input id="name" required></div>
+<div><label>Price</label><input id="price" placeholder="₹30,000" required></div>
+<div><label>Category</label><input id="category" required></div>
+<div class="full"><label>Short Description</label><textarea id="description"></textarea></div>
+<div><label>Dimensions</label><input id="dimensions"></div>
+<div><label>Material</label><input id="material"></div>
+<div><label>Display Order</label><input id="productOrder" type="number" value="0"></div>
+<div class="check"><input id="featured" type="checkbox"><label for="featured">Show in Featured Products</label></div>
+<div class="check"><input id="newArrival" type="checkbox"><label for="newArrival">Show in New Arrivals</label></div>
+<div class="full actions"><button type="submit" id="saveProductBtn">Add Product</button><button type="button" id="cancelProduct" class="secondary hidden">Cancel Edit</button></div>
+</form>
+<div id="productStatus" class="status"></div>
 </div>
 <div class="card"><h2>All Products</h2><div id="products" class="products"></div></div>
 </div>
 
-<div id="sitePanel" class="panel">
+<div id="homePanel" class="panel">
 <div class="card">
-<h2>Complete Website Settings</h2>
-<p class="note">All editable website text, navigation, hero, headings, About, Contact and Footer are controlled here.</p>
-<form id="siteForm" class="grid">
-<h3 class="full">Header &amp; Navigation</h3>
-<div><label>Brand Name</label><input id="sBrand"></div>
-<div><label>Home Menu Label</label><input id="sHomeNav"></div>
-<div><label>Furniture Menu Label</label><input id="sFurnitureNav"></div>
-<div><label>Home Décor Menu Label</label><input id="sDecorNav"></div>
-<div><label>New Arrivals Menu Label</label><input id="sNewNav"></div>
-<div><label>Contact Menu Label</label><input id="sContactNav"></div>
-
-<h3 class="full">Hero</h3>
-<div><label>Hero Eyebrow</label><input id="sHeroEyebrow"></div>
-<div><label>Hero Button</label><input id="sHeroButton"></div>
-<div class="full"><label>Hero Heading</label><input id="sHeroTitle"></div>
-<div class="full"><label>Hero Text</label><textarea id="sHeroText"></textarea></div>
-<div><label>Hero Image</label><input id="sHeroFile" type="file" accept="image/*"></div>
-<div><label>Hero Image URL (optional)</label><input id="sHeroUrl"></div>
-
-<h3 class="full">Section Headings</h3>
-<div><label>Category Section Heading</label><input id="sCategoryHeading"></div>
-<div><label>Featured Products Heading</label><input id="sFeaturedHeading"></div>
-<div><label>Furniture Collection Heading</label><input id="sFurnitureHeading"></div>
-<div><label>Home Décor Collection Heading</label><input id="sDecorHeading"></div>
-<div><label>New Arrivals Heading</label><input id="sNewHeading"></div>
-
-<h3 class="full">About</h3>
-<div><label>About Eyebrow</label><input id="sAboutEyebrow"></div>
-<div class="full"><label>About Heading</label><input id="sAboutTitle"></div>
-<div class="full"><label>About Text</label><textarea id="sAboutText"></textarea></div>
-
-<h3 class="full">Contact / Inquiry</h3>
-<div><label>Contact Eyebrow</label><input id="sContactEyebrow"></div>
-<div><label>Contact Heading</label><input id="sContactTitle"></div>
-<div class="full"><label>Contact Text</label><textarea id="sContactText"></textarea></div>
-<div><label>Phone</label><input id="sPhone"></div>
-<div><label>Email</label><input id="sEmail"></div>
-<div><label>WhatsApp</label><input id="sWhatsApp"></div>
-<div><label>Address</label><input id="sAddress"></div>
-
-<h3 class="full">Footer</h3>
-<div><label>Footer Brand</label><input id="sFooterBrand"></div>
-<div class="full"><label>Footer Text</label><input id="sFooterText"></div>
-<div class="full actions"><button type="submit">Save Entire Website Settings</button></div>
-</form><div id="siteStatus" class="status"></div>
+<h2>Homepage / Hero</h2>
+<form id="homeForm" class="grid">
+<div><label>Brand Name</label><input id="brandName"></div>
+<div><label>Hero Eyebrow</label><input id="heroEyebrow"></div>
+<div class="full"><label>Hero Heading</label><input id="heroTitle"></div>
+<div class="full"><label>Hero Text</label><textarea id="heroText"></textarea></div>
+<div><label>Hero Button Text</label><input id="heroButton"></div>
+<div><label>Hero Image</label><input id="heroImage" type="file" accept="image/*"></div>
+<div><label>Shop by Category Heading</label><input id="categoryHeading"></div>
+<div><label>Featured Heading</label><input id="featuredHeading"></div>
+<div><label>New Arrivals Heading</label><input id="newHeading"></div>
+<div class="full"><label>Hero / Main Image URL (optional)</label><input id="heroImageUrl"></div>
+<div class="full actions"><button type="submit">Save Homepage</button></div>
+</form>
+<div id="homeStatus" class="status"></div>
 </div>
 </div>
 
 <div id="categoriesPanel" class="panel">
-<div class="card"><h2>Categories</h2>
-<form id="catForm" class="grid"><input id="catId" type="hidden">
-<div><label>Category Name</label><input id="catName" required></div><div><label>Subtitle</label><input id="catSubtitle"></div>
-<div><label>Target Section</label><select id="catTarget"><option value="furniture">Furniture</option><option value="decor">Home Décor</option><option value="new">New Arrivals</option><option value="featured">Featured Products</option></select></div>
+<div class="card">
+<h2>Shop by Category</h2>
+<form id="categoryForm" class="grid">
+<input id="categoryId" type="hidden">
+<div><label>Category Name</label><input id="catName" required></div>
+<div><label>Subtitle</label><input id="catSubtitle"></div>
+<div><label>Target Section</label><select id="catTarget"><option value="featured">Featured Products</option><option value="furniture">Furniture</option><option value="decor">Home Décor</option><option value="new">New Arrivals</option></select></div>
 <div><label>Display Order</label><input id="catOrder" type="number" value="0"></div>
-<div class="full actions"><button type="submit" id="catSave">Add Category</button><button type="button" id="catCancel" class="secondary hidden">Cancel</button></div></form>
-<div id="catStatus" class="status"></div></div>
-<div class="card"><div id="catList" class="list"></div></div>
+<div class="full actions"><button type="submit" id="saveCatBtn">Add Category</button><button type="button" id="cancelCat" class="secondary hidden">Cancel Edit</button></div>
+</form>
+<div id="catStatus" class="status"></div>
+</div>
+<div class="card"><div id="categoriesList" class="list"></div></div>
 </div>
 
 <div id="collectionsPanel" class="panel">
-<div class="card"><h2>Furniture / Home Décor Collections</h2>
-<form id="colForm" class="grid"><input id="colId" type="hidden">
-<div><label>Collection Type</label><select id="colType"><option value="furniture">Furniture</option><option value="decor">Home Décor</option></select></div>
-<div><label>Title</label><input id="colTitle" required></div><div class="full"><label>Description</label><textarea id="colDescription"></textarea></div>
-<div><label>Collection Image</label><input id="colFile" type="file" accept="image/*"></div><div><label>Image URL (optional)</label><input id="colUrl"></div>
-<div><label>Display Order</label><input id="colOrder" type="number" value="0"></div>
-<div class="full actions"><button type="submit" id="colSave">Add Collection</button><button type="button" id="colCancel" class="secondary hidden">Cancel</button></div></form>
-<div id="colStatus" class="status"></div></div>
-<div class="card"><div id="colList" class="list"></div></div>
+<div class="card">
+<h2>Furniture / Home Décor Collection Cards</h2>
+<form id="collectionForm" class="grid">
+<input id="collectionId" type="hidden">
+<div><label>Collection Type</label><select id="collectionType"><option value="furniture">Furniture</option><option value="decor">Home Décor</option></select></div>
+<div><label>Title</label><input id="collectionTitle" required></div>
+<div class="full"><label>Description</label><textarea id="collectionDescription"></textarea></div>
+<div><label>Image</label><input id="collectionImage" type="file" accept="image/*"></div>
+<div><label>Display Order</label><input id="collectionOrder" type="number" value="0"></div>
+<div class="full"><label>Image URL (optional)</label><input id="collectionImageUrl"></div>
+<div class="full actions"><button type="submit" id="saveCollectionBtn">Add Collection Card</button><button type="button" id="cancelCollection" class="secondary hidden">Cancel Edit</button></div>
+</form>
+<div id="collectionStatus" class="status"></div>
+</div>
+<div class="card"><div id="collectionsList" class="list"></div></div>
 </div>
 
-<div id="inquiriesPanel" class="panel"><div class="card"><h2>Customer Inquiries</h2><div id="inqList" class="list"></div></div></div>
+<div id="aboutPanel" class="panel">
+<div class="card">
+<h2>About / Contact / Footer</h2>
+<form id="aboutForm" class="grid">
+<div><label>About Eyebrow</label><input id="aboutEyebrow"></div>
+<div><label>Contact Eyebrow</label><input id="contactEyebrow"></div>
+<div class="full"><label>About Heading</label><input id="aboutTitle"></div>
+<div class="full"><label>About Text</label><textarea id="aboutText"></textarea></div>
+<div class="full"><label>Contact Heading</label><input id="contactTitle"></div>
+<div class="full"><label>Contact Text</label><textarea id="contactText"></textarea></div>
+<div><label>Footer Brand</label><input id="footerBrand"></div>
+<div><label>Footer Text</label><input id="footerText"></div>
+<div><label>Phone</label><input id="phone"></div>
+<div><label>Email</label><input id="businessEmail" type="email"></div>
+<div><label>WhatsApp</label><input id="whatsapp"></div>
+<div><label>Address</label><input id="address"></div>
+<div class="full actions"><button type="submit">Save About / Contact</button></div>
+</form>
+<div id="aboutStatus" class="status"></div>
+</div>
+</div>
+
+<div id="inquiriesPanel" class="panel">
+<div class="card"><h2>Customer Inquiries</h2><div id="inquiries" class="list"></div></div>
+</div>
 </section>
 </div>
 
-<div id="imageViewer" class="imageViewer">
+<div id="imageViewer" class="imageViewer" aria-hidden="true">
+<div class="viewerBox">
 <button type="button" class="viewerClose" id="viewerClose">×</button>
 <button type="button" class="viewerPrev" id="viewerPrev">‹</button>
-<img id="viewerImage" src="" alt="Product image">
+<img id="viewerMain" src="" alt="Product image">
 <button type="button" class="viewerNext" id="viewerNext">›</button>
-</div>
+<div id="viewerThumbs" class="viewerThumbs"></div>
+</div></div>
 <script type="module">
-import{initializeApp}from'https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js';
-import{getAuth,signInWithEmailAndPassword,onAuthStateChanged,signOut}from'https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js';
-import{getFirestore,collection,getDocs,getDoc,addDoc,updateDoc,deleteDoc,doc,setDoc,serverTimestamp}from'https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js';
-import{firebaseConfig}from'./firebase-config.js';
+import {initializeApp} from 'https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js';
+import {getAuth,signInWithEmailAndPassword,onAuthStateChanged,signOut} from 'https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js';
+import {getFirestore,collection,addDoc,getDocs,updateDoc,deleteDoc,doc,getDoc,setDoc,serverTimestamp,query,orderBy} from 'https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js';
+import {firebaseConfig} from './firebase-config.js';
 
-const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getFirestore(app),$=id=>document.getElementById(id);const imageViewer=$('imageViewer'),viewerImage=$('viewerImage');
-let viewerImages=[],viewerIndex=0;
-window.openProductImage=function(src){viewerImages=[src];viewerIndex=0;viewerImage.src=src;imageViewer.classList.add('show')}
-function closeProductImage(){imageViewer.classList.remove('show');viewerImage.src=''}
-$('viewerClose').onclick=closeProductImage;
-$('viewerPrev').onclick=()=>{};
-$('viewerNext').onclick=()=>{};
-imageViewer.onclick=e=>{if(e.target===imageViewer)closeProductImage()};
-document.addEventListener('keydown',e=>{if(e.key==='Escape')closeProductImage()});
-
+const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getFirestore(app);
+const $=id=>document.getElementById(id);
 const esc=s=>String(s??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
-const status=(id,t)=>$(id).textContent=t;
-document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));b.classList.add('active');$(b.dataset.panel).classList.add('active')});
-$('loginForm').onsubmit=async e=>{e.preventDefault();status('loginStatus','Logging in...');try{await signInWithEmailAndPassword(auth,$('loginEmail').value,$('loginPassword').value);status('loginStatus','')}catch(e){status('loginStatus',(e.code||'ERROR')+': '+e.message)}};
+const setStatus=(id,msg)=>$(id).textContent=msg;
+
+document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));b.classList.add('active');$(b.dataset.tab).classList.add('active');});
+$('loginForm').onsubmit=async e=>{e.preventDefault();setStatus('loginStatus','Logging in...');try{await signInWithEmailAndPassword(auth,$('loginEmail').value,$('loginPassword').value);setStatus('loginStatus','');}catch(err){setStatus('loginStatus',(err.code||'ERROR')+': '+(err.message||''));}};
 $('logoutBtn').onclick=()=>signOut(auth);
 
-async function img(file){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>{const i=new Image();i.onload=()=>{const s=Math.min(1,700/Math.max(i.width,i.height)),c=document.createElement('canvas');c.width=Math.max(1,Math.round(i.width*s));c.height=Math.max(1,Math.round(i.height*s));c.getContext('2d').drawImage(i,0,0,c.width,c.height);res(c.toDataURL('image/jpeg',.55))};i.onerror=rej;i.src=r.result};r.onerror=rej;r.readAsDataURL(file)})}
-async function multiImages(files){const a=[];for(const f of files)a.push(await img(f));return a}
-function resetP(){$('productForm').reset();$('productId').value='';$('existingImages').innerHTML='';$('productTitle').textContent='Add Product';$('saveProduct').textContent='Add Product';$('cancelProduct').classList.add('hidden');$('pOrder').value=0}
-$('cancelProduct').onclick=resetP;
+async function compressImage(file,max=850,q=.65){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>{const i=new Image();i.onload=()=>{const s=Math.min(1,max/Math.max(i.width,i.height)),w=Math.round(i.width*s),h=Math.round(i.height*s),c=document.createElement('canvas');c.width=w;c.height=h;c.getContext('2d').drawImage(i,0,0,w,h);const d=c.toDataURL('image/jpeg',q);if(d.length>850000)rej(new Error('Image is too large'));else res(d)};i.onerror=rej;i.src=r.result};r.onerror=rej;r.readAsDataURL(file)})}
+async function fileOrUrl(file,url){return file?await compressImage(file):url||''}
+function resetProduct(){
+  $('productForm').reset(); $('productId').value='';
+  $('productFormTitle').textContent='Add Product'; $('saveProductBtn').textContent='Add Product';
+  $('cancelProduct').classList.add('hidden'); $('productOrder').value=0; $('existingImages').innerHTML='';
+}
+$('cancelProduct').onclick=resetProduct;
 
-async function loadProducts(){const s=await getDocs(collection(db,'products'));const a=s.docs.map(d=>({id:d.id,...d.data()})).sort((x,y)=>(x.order||0)-(y.order||0));$('products').innerHTML=a.length?a.map(p=>{const ims=p.imageUrls?.length?p.imageUrls:(p.imageUrl?[p.imageUrl]:[]);return`<div class="item"><img class="imgclick" src="${esc(ims[0]||'')}" alt="" title="Click to open image" onclick="openProductImage(this.src)"><h3>${esc(p.name)}</h3><div class="small">${esc(p.category)} · ${esc(p.price)}</div><div class="thumbs">${ims.slice(0,7).map(x=>`<img class="thumb imgclick" src="${esc(x)}" title="Click to open image" onclick="openProductImage(this.src)">`).join('')}</div>${p.featured?'<span class="small">Featured</span> ':''}${p.newArrival?'<span class="small">New Arrival</span>':''}<div class="actions"><button data-edit="${p.id}">Edit</button><button class="danger" data-delete="${p.id}">Delete</button></div></div>`}).join(''):'<p>No products yet.</p>';a.forEach(p=>{$(`[data-edit="${p.id}"]`).onclick=()=>editP(p);$(`[data-delete="${p.id}"]`).onclick=async()=>{if(confirm('Delete this product?')){await deleteDoc(doc(db,'products',p.id));loadProducts()}}})}
-function editP(p){$('productId').value=p.id;$('pName').value=p.name||'';$('pPrice').value=p.price||'';$('pCategory').value=p.category||'';$('pDescription').value=p.description||'';$('pDimensions').value=p.dimensions||'';$('pMaterial').value=p.material||'';$('pOrder').value=p.order||0;$('pFeatured').checked=!!p.featured;$('pNew').checked=!!p.newArrival;const ims=p.imageUrls?.length?p.imageUrls:(p.imageUrl?[p.imageUrl]:[]);$('existingImages').innerHTML=ims.map(x=>`<img class="thumb imgclick" src="${esc(x)}" title="Click to open image" onclick="openProductImage(this.src)">`).join('');$('productTitle').textContent='Edit Product';$('saveProduct').textContent='Save Product Changes';$('cancelProduct').classList.remove('hidden');window.scrollTo({top:0,behavior:'smooth'})}
-$('productForm').onsubmit=async e=>{e.preventDefault();status('productStatus','Saving...');try{const id=$('productId').value,old=id?(await getDoc(doc(db,'products',id))).data():null;let ims=old?.imageUrls||(old?.imageUrl?[old.imageUrl]:[]);if($('photos').files.length)ims=await multiImages([...$('photos').files]);if(!ims.length)throw new Error('Please upload at least one product image.');const data={name:$('pName').value.trim(),price:$('pPrice').value.trim(),category:$('pCategory').value.trim(),description:$('pDescription').value.trim(),dimensions:$('pDimensions').value.trim(),material:$('pMaterial').value.trim(),imageUrls:ims,imageUrl:ims[0],order:Number($('pOrder').value)||0,featured:$('pFeatured').checked,newArrival:$('pNew').checked,updatedAt:serverTimestamp()};if(id)await updateDoc(doc(db,'products',id),data);else{data.createdAt=serverTimestamp();await addDoc(collection(db,'products'),data)}resetP();status('productStatus','Product saved.');loadProducts()}catch(e){status('productStatus','Save failed: '+e.message)}};
+async function compressImage(file){
+  return new Promise((resolve,reject)=>{
+    const r=new FileReader();
+    r.onload=()=>{
+      const img=new Image();
+      img.onload=()=>{
+        const max=650, scale=Math.min(1,max/Math.max(img.width,img.height));
+        const c=document.createElement('canvas'); c.width=Math.max(1,Math.round(img.width*scale)); c.height=Math.max(1,Math.round(img.height*scale));
+        c.getContext('2d').drawImage(img,0,0,c.width,c.height);
+        let data=c.toDataURL('image/jpeg',.55);
+        if(data.length>220000){ data=c.toDataURL('image/jpeg',.42); }
+        if(data.length>260000) reject(new Error('Image is too large after compression. Please choose a smaller image.'));
+        else resolve(data);
+      };
+      img.onerror=()=>reject(new Error('Could not read image.'));
+      img.src=r.result;
+    };
+    r.onerror=()=>reject(new Error('Could not read file.'));
+    r.readAsDataURL(file);
+  });
+}
 
-const siteFields={sBrand:'brandName',sHomeNav:'homeNav',sFurnitureNav:'furnitureNav',sDecorNav:'decorNav',sNewNav:'newNav',sContactNav:'contactNav',sHeroEyebrow:'heroEyebrow',sHeroButton:'heroButton',sHeroTitle:'heroTitle',sHeroText:'heroText',sHeroUrl:'heroImageUrl',sCategoryHeading:'categoryHeading',sFeaturedHeading:'featuredHeading',sFurnitureHeading:'furnitureHeading',sDecorHeading:'decorHeading',sNewHeading:'newHeading',sAboutEyebrow:'aboutEyebrow',sAboutTitle:'aboutTitle',sAboutText:'aboutText',sContactEyebrow:'contactEyebrow',sContactTitle:'contactTitle',sContactText:'contactText',sPhone:'phone',sEmail:'email',sWhatsApp:'whatsapp',sAddress:'address',sFooterBrand:'footerBrand',sFooterText:'footerText'};
-async function loadSite(){const s=await getDoc(doc(db,'siteContent','site'));const p=s.exists()?s.data():{};for(const[id,k]of Object.entries(siteFields))$(id).value=p[k]||''}
-$('siteForm').onsubmit=async e=>{e.preventDefault();status('siteStatus','Saving...');try{const data={};for(const[id,k]of Object.entries(siteFields))data[k]=$(id).value.trim();if($('sHeroFile').files[0])data.heroImageUrl=await img($('sHeroFile').files[0]);data.updatedAt=serverTimestamp();await setDoc(doc(db,'siteContent','site'),data,{merge:true});status('siteStatus','Entire website settings saved.')}catch(e){status('siteStatus','Save failed: '+e.message)}};
+function productImages(p){return (Array.isArray(p.imageUrls)&&p.imageUrls.length?p.imageUrls:(p.imageUrl?[p.imageUrl]:[]));}
 
-async function loadCats(){const s=await getDocs(collection(db,'categories'));const a=s.docs.map(d=>({id:d.id,...d.data()}));$('catList').innerHTML=a.map(c=>`<div class="row"><div class="rowhead"><div><h3>${esc(c.name)}</h3><div class="small">${esc(c.subtitle||'')}</div></div><div><button data-ce="${c.id}">Edit</button> <button class="danger" data-cd="${c.id}">Delete</button></div></div></div>`).join('')||'<p>No categories.</p>';a.forEach(c=>{$(`[data-ce="${c.id}"]`).onclick=()=>{$('catId').value=c.id;$('catName').value=c.name||'';$('catSubtitle').value=c.subtitle||'';$('catTarget').value=c.target||'furniture';$('catOrder').value=c.order||0;$('catSave').textContent='Save Changes';$('catCancel').classList.remove('hidden')};$(`[data-cd="${c.id}"]`).onclick=async()=>{if(confirm('Delete category?')){await deleteDoc(doc(db,'categories',c.id));loadCats()}}})}
-$('catForm').onsubmit=async e=>{e.preventDefault();const id=$('catId').value,d={name:$('catName').value.trim(),subtitle:$('catSubtitle').value.trim(),target:$('catTarget').value,order:Number($('catOrder').value)||0,updatedAt:serverTimestamp()};if(id)await updateDoc(doc(db,'categories',id),d);else{d.createdAt=serverTimestamp();await addDoc(collection(db,'categories'),d)}$('catForm').reset();$('catId').value='';$('catSave').textContent='Add Category';$('catCancel').classList.add('hidden');loadCats()};$('catCancel').onclick=()=>{$('catForm').reset();$('catId').value='';$('catSave').textContent='Add Category';$('catCancel').classList.add('hidden')};
+function showExistingImages(images){
+  $('existingImages').innerHTML=(images||[]).map((x,i)=>`<img class="editThumb productImage" data-eimg="${i}" src="${esc(x)}" alt="Product image ${i+1}">`).join('');
+  $('existingImages').querySelectorAll('[data-eimg]').forEach((el,i)=>el.onclick=()=>openImageViewer(images,i));
+}
 
-async function loadCols(){const s=await getDocs(collection(db,'collections'));const a=s.docs.map(d=>({id:d.id,...d.data()}));$('colList').innerHTML=a.map(c=>`<div class="row"><div class="rowhead"><div><h3>${esc(c.title)}</h3><div class="small">${esc(c.type)} · ${esc(c.description||'')}</div>${c.imageUrl?`<img class="thumb" src="${esc(c.imageUrl)}">`:''}</div><div><button data-ce="${c.id}">Edit</button> <button class="danger" data-cd="${c.id}">Delete</button></div></div></div>`).join('')||'<p>No collections.</p>';a.forEach(c=>{$(`[data-ce="${c.id}"]`).onclick=()=>{$('colId').value=c.id;$('colType').value=c.type||'furniture';$('colTitle').value=c.title||'';$('colDescription').value=c.description||'';$('colUrl').value=c.imageUrl||'';$('colOrder').value=c.order||0;$('colSave').textContent='Save Changes';$('colCancel').classList.remove('hidden')};$(`[data-cd="${c.id}"]`).onclick=async()=>{if(confirm('Delete collection?')){await deleteDoc(doc(db,'collections',c.id));loadCols()}}})}
-$('colForm').onsubmit=async e=>{e.preventDefault();const id=$('colId').value,old=id?(await getDoc(doc(db,'collections',id))).data():null;let image=$('colUrl').value.trim()||old?.imageUrl||'';if($('colFile').files[0])image=await img($('colFile').files[0]);const d={type:$('colType').value,title:$('colTitle').value.trim(),description:$('colDescription').value.trim(),imageUrl:image,order:Number($('colOrder').value)||0,updatedAt:serverTimestamp()};if(id)await updateDoc(doc(db,'collections',id),d);else{d.createdAt=serverTimestamp();await addDoc(collection(db,'collections'),d)}$('colForm').reset();$('colId').value='';$('colSave').textContent='Add Collection';$('colCancel').classList.add('hidden');loadCols()};$('colCancel').onclick=()=>{$('colForm').reset();$('colId').value='';$('colSave').textContent='Add Collection';$('colCancel').classList.add('hidden')};
+async function fillProduct(id,p){
+  $('productId').value=id; $('name').value=p.name||''; $('price').value=p.price||''; $('category').value=p.category||'';
+  $('description').value=p.description||''; $('dimensions').value=p.dimensions||''; $('material').value=p.material||'';
+  $('productOrder').value=p.order||0; $('featured').checked=!!p.featured; $('newArrival').checked=!!p.newArrival;
+  $('productFormTitle').textContent='Edit Product'; $('saveProductBtn').textContent='Save Changes'; $('cancelProduct').classList.remove('hidden');
+  showExistingImages(productImages(p)); window.scrollTo({top:0,behavior:'smooth'});
+}
 
-async function loadInq(){const s=await getDocs(collection(db,'inquiries'));const a=s.docs.map(d=>({id:d.id,...d.data()}));$('inqList').innerHTML=a.map(i=>`<div class="row"><h3>${esc(i.name||'')}</h3><div>${esc(i.phone||'')}</div><p>${esc(i.message||'')}</p><div class="small">${esc(i.status||'New')}</div><div class="actions"><button data-res="${i.id}">Mark Resolved</button><button class="danger" data-del="${i.id}">Delete</button></div></div>`).join('')||'<p>No inquiries.</p>';a.forEach(i=>{$(`[data-res="${i.id}"]`).onclick=async()=>{await updateDoc(doc(db,'inquiries',i.id),{status:'Resolved',updatedAt:serverTimestamp()});loadInq()};$(`[data-del="${i.id}"]`).onclick=async()=>{if(confirm('Delete inquiry?')){await deleteDoc(doc(db,'inquiries',i.id));loadInq()}}})}
-onAuthStateChanged(auth,u=>{if(u){$('loginCard').classList.add('hidden');$('adminApp').classList.remove('hidden');loadProducts();loadSite();loadCats();loadCols();loadInq()}else{$('adminApp').classList.add('hidden');$('loginCard').classList.remove('hidden')}});
+async function loadProducts(){
+  const box=$('products'); box.innerHTML='Loading...';
+  try{
+    const s=await getDocs(collection(db,'products'));
+    const arr=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(a.order||0)-(b.order||0));
+    box.innerHTML=arr.length?arr.map(p=>{
+      const ims=productImages(p), main=ims[0]||'';
+      return `<div class="item">
+        ${main?`<img class="productImage" data-mainimg="${p.id}" src="${esc(main)}" alt="${esc(p.name)}">`:''}
+        <h3>${esc(p.name)}</h3><p>${esc(p.category)}</p><p><strong>${esc(p.price)}</strong></p>
+        ${ims.length>1?`<p class="small">${ims.length} images</p>`:''}
+        ${p.featured?'<span class="badge">Featured</span>':''}${p.newArrival?'<span class="badge">New Arrival</span>':''}
+        <div class="actions"><button data-edit="${p.id}">Edit</button><button class="danger" data-del="${p.id}">Delete</button></div>
+      </div>`;
+    }).join(''):'<p>No products added yet.</p>';
+    arr.forEach(p=>{
+      const ims=productImages(p);
+      box.querySelector(`[data-mainimg="${p.id}"]`)?.addEventListener('click',()=>openImageViewer(ims,0));
+      box.querySelector(`[data-edit="${p.id}"]`)?.addEventListener('click',()=>fillProduct(p.id,p));
+      box.querySelector(`[data-del="${p.id}"]`)?.addEventListener('click',()=>removeProduct(p.id));
+    });
+  }catch(e){box.innerHTML='<p>Could not load products: '+esc(e.message)+'</p>'}
+}
+
+async function removeProduct(id){
+  if(!confirm('Delete this product?'))return;
+  try{await deleteDoc(doc(db,'products',id));await loadProducts();setStatus('productStatus','Product deleted.')}
+  catch(e){setStatus('productStatus','Delete failed: '+e.message)}
+}
+
+$('productForm').onsubmit=async e=>{
+  e.preventDefault(); setStatus('productStatus','Saving...');
+  try{
+    const id=$('productId').value;
+    const old=id?(await getDoc(doc(db,'products',id))).data():null;
+    const files=[...($('photo').files||[])];
+    let images;
+    if(files.length){
+      images=[];
+      for(const f of files) images.push(await compressImage(f));
+      const total=images.reduce((n,x)=>n+x.length,0);
+      if(total>850000) throw new Error('Selected images are too large together. Please use fewer/smaller images.');
+    }else{
+      images=productImages(old||{});
+    }
+    if(!images.length) throw new Error('Please select at least one product image.');
+    const data={name:$('name').value.trim(),price:$('price').value.trim(),category:$('category').value.trim(),
+      description:$('description').value.trim(),dimensions:$('dimensions').value.trim(),material:$('material').value.trim(),
+      imageUrls:images,imageUrl:images[0],order:Number($('productOrder').value)||0,featured:$('featured').checked,
+      newArrival:$('newArrival').checked,updatedAt:serverTimestamp()};
+    if(id) await updateDoc(doc(db,'products',id),data);
+    else {data.createdAt=serverTimestamp();await addDoc(collection(db,'products'),data)}
+    resetProduct();setStatus('productStatus','Product saved.');await loadProducts();
+  }catch(err){setStatus('productStatus','Save failed: '+err.message)}
+};
+
+// Same-page image viewer
+const imageViewer=$('imageViewer'),viewerMain=$('viewerMain'),viewerThumbs=$('viewerThumbs');
+let viewerImages=[],viewerIndex=0;
+function openImageViewer(images,index=0){
+  viewerImages=images||[]; viewerIndex=Math.max(0,Math.min(index,viewerImages.length-1));
+  renderImageViewer(); imageViewer.classList.add('show'); imageViewer.setAttribute('aria-hidden','false');
+}
+function renderImageViewer(){
+  if(!viewerImages.length)return;
+  viewerMain.src=viewerImages[viewerIndex];
+  viewerThumbs.innerHTML=viewerImages.map((x,i)=>`<img class="viewerThumb ${i===viewerIndex?'active':''}" data-vi="${i}" src="${esc(x)}" alt="Image ${i+1}">`).join('');
+  viewerThumbs.querySelectorAll('[data-vi]').forEach(el=>el.onclick=()=>{viewerIndex=Number(el.dataset.vi);renderImageViewer()});
+}
+function closeImageViewer(){imageViewer.classList.remove('show');imageViewer.setAttribute('aria-hidden','true');viewerMain.src='';viewerThumbs.innerHTML='';}
+$('viewerClose').onclick=closeImageViewer;
+$('viewerPrev').onclick=()=>{if(viewerImages.length){viewerIndex=(viewerIndex-1+viewerImages.length)%viewerImages.length;renderImageViewer()}};
+$('viewerNext').onclick=()=>{if(viewerImages.length){viewerIndex=(viewerIndex+1)%viewerImages.length;renderImageViewer()}};
+imageViewer.onclick=e=>{if(e.target===imageViewer)closeImageViewer()};
+document.addEventListener('keydown',e=>{if(!imageViewer.classList.contains('show'))return;if(e.key==='Escape')closeImageViewer();if(e.key==='ArrowLeft')$('viewerPrev').click();if(e.key==='ArrowRight')$('viewerNext').click()});
+
+async function loadHome(){const s=await getDoc(doc(db,'siteContent','home'));const p=s.exists()?s.data():{};$('brandName').value=p.brandName||'HD FURNITURE & HOME DECORE';$('heroEyebrow').value=p.heroEyebrow||'Furniture & Home Décor';$('heroTitle').value=p.heroTitle||'Traditional character. Modern living.';$('heroText').value=p.heroText||'Explore furniture and home décor collections for your living spaces.';$('heroButton').value=p.heroButton||'Shop Now';$('heroImageUrl').value=p.heroImageUrl||'';$('categoryHeading').value=p.categoryHeading||'Shop by Category';$('featuredHeading').value=p.featuredHeading||'Featured Products';$('newHeading').value=p.newHeading||'New Arrivals'}
+$('homeForm').onsubmit=async e=>{e.preventDefault();setStatus('homeStatus','Saving...');try{let image=$('heroImageUrl').value.trim();if($('heroImage').files[0])image=await compressImage($('heroImage').files[0]);await setDoc(doc(db,'siteContent','home'),{brandName:$('brandName').value.trim(),heroEyebrow:$('heroEyebrow').value.trim(),heroTitle:$('heroTitle').value.trim(),heroText:$('heroText').value.trim(),heroButton:$('heroButton').value.trim(),heroImageUrl:image,categoryHeading:$('categoryHeading').value.trim(),featuredHeading:$('featuredHeading').value.trim(),newHeading:$('newHeading').value.trim(),updatedAt:serverTimestamp()},{merge:true});setStatus('homeStatus','Homepage saved.')}catch(err){setStatus('homeStatus','Save failed: '+err.message)}};
+
+function resetCat(){$('categoryForm').reset();$('categoryId').value='';$('saveCatBtn').textContent='Add Category';$('cancelCat').classList.add('hidden');$('catOrder').value=0}
+$('cancelCat').onclick=resetCat;
+async function loadCategories(){const s=await getDocs(collection(db,'categories'));const a=s.docs.map(d=>({id:d.id,...d.data()})).sort((x,y)=>(x.order||0)-(y.order||0));$('categoriesList').innerHTML=a.map(c=>`<div class="row"><div class="row-head"><div><h3>${esc(c.name)}</h3><div class="muted">${esc(c.subtitle||'')}</div></div><div><button data-ce="${c.id}">Edit</button> <button class="danger" data-cd="${c.id}">Delete</button></div></div></div>`).join('')||'<p>No categories yet.</p>';a.forEach(c=>{$(`[data-ce="${c.id}"]`).onclick=()=>{$('categoryId').value=c.id;$('catName').value=c.name||'';$('catSubtitle').value=c.subtitle||'';$('catTarget').value=c.target||'featured';$('catOrder').value=c.order||0;$('saveCatBtn').textContent='Save Changes';$('cancelCat').classList.remove('hidden')};$(`[data-cd="${c.id}"]`).onclick=async()=>{if(confirm('Delete this category?')){await deleteDoc(doc(db,'categories',c.id));loadCategories()}}})}
+$('categoryForm').onsubmit=async e=>{e.preventDefault();setStatus('catStatus','Saving...');const id=$('categoryId').value;const data={name:$('catName').value.trim(),subtitle:$('catSubtitle').value.trim(),target:$('catTarget').value,order:Number($('catOrder').value)||0,updatedAt:serverTimestamp()};if(id)await updateDoc(doc(db,'categories',id),data);else{data.createdAt=serverTimestamp();await addDoc(collection(db,'categories'),data)}resetCat();setStatus('catStatus','Saved successfully.');loadCategories()};
+
+function resetCollection(){$('collectionForm').reset();$('collectionId').value='';$('saveCollectionBtn').textContent='Add Collection Card';$('cancelCollection').classList.add('hidden');$('collectionOrder').value=0}
+$('cancelCollection').onclick=resetCollection;
+async function loadCollections(){const s=await getDocs(collection(db,'collections'));const a=s.docs.map(d=>({id:d.id,...d.data()})).sort((x,y)=>(x.order||0)-(y.order||0));$('collectionsList').innerHTML=a.map(c=>`<div class="row"><div class="row-head"><div><h3>${esc(c.title)}</h3><div class="muted">${esc(c.type)} · ${esc(c.description||'')}</div>${c.imageUrl?`<img class="thumb" src="${esc(c.imageUrl)}">`:''}</div><div><button data-oe="${c.id}">Edit</button> <button class="danger" data-od="${c.id}">Delete</button></div></div></div>`).join('')||'<p>No collection cards yet.</p>';a.forEach(c=>{$(`[data-oe="${c.id}"]`).onclick=()=>{$('collectionId').value=c.id;$('collectionType').value=c.type||'furniture';$('collectionTitle').value=c.title||'';$('collectionDescription').value=c.description||'';$('collectionImageUrl').value=c.imageUrl||'';$('collectionOrder').value=c.order||0;$('saveCollectionBtn').textContent='Save Changes';$('cancelCollection').classList.remove('hidden')};$(`[data-od="${c.id}"]`).onclick=async()=>{if(confirm('Delete this collection card?')){await deleteDoc(doc(db,'collections',c.id));loadCollections()}}})}
+$('collectionForm').onsubmit=async e=>{e.preventDefault();setStatus('collectionStatus','Saving...');try{const id=$('collectionId').value;const old=id?(await getDoc(doc(db,'collections',id))).data():null;let image=$('collectionImageUrl').value.trim()||old?.imageUrl||'';if($('collectionImage').files[0])image=await compressImage($('collectionImage').files[0]);const data={type:$('collectionType').value,title:$('collectionTitle').value.trim(),description:$('collectionDescription').value.trim(),imageUrl:image,order:Number($('collectionOrder').value)||0,updatedAt:serverTimestamp()};if(id)await updateDoc(doc(db,'collections',id),data);else{data.createdAt=serverTimestamp();await addDoc(collection(db,'collections'),data)}resetCollection();setStatus('collectionStatus','Saved successfully.');loadCollections()}catch(err){setStatus('collectionStatus','Save failed: '+err.message)}};
+
+async function loadAbout(){const s=await getDoc(doc(db,'siteContent','business'));const p=s.exists()?s.data():{};for(const [id,key] of Object.entries({aboutEyebrow:'aboutEyebrow',contactEyebrow:'contactEyebrow',aboutTitle:'aboutTitle',aboutText:'aboutText',contactTitle:'contactTitle',contactText:'contactText',footerBrand:'footerBrand',footerText:'footerText',phone:'phone',businessEmail:'businessEmail',whatsapp:'whatsapp',address:'address'}))$(id).value=p[key]||''}
+$('aboutForm').onsubmit=async e=>{e.preventDefault();setStatus('aboutStatus','Saving...');const keys=['aboutEyebrow','contactEyebrow','aboutTitle','aboutText','contactTitle','contactText','footerBrand','footerText','phone','businessEmail','whatsapp','address'];const data={};keys.forEach(k=>data[k]=$(k).value.trim());data.updatedAt=serverTimestamp();await setDoc(doc(db,'siteContent','business'),data,{merge:true});setStatus('aboutStatus','Saved successfully.')};
+
+async function loadInquiries(){const s=await getDocs(collection(db,'inquiries'));const a=s.docs.map(d=>({id:d.id,...d.data()})).sort((x,y)=>(y.createdAt?.seconds||0)-(x.createdAt?.seconds||0));$('inquiries').innerHTML=a.map(i=>`<div class="inquiry"><strong>${esc(i.name||'')}</strong><div>${esc(i.phone||'')}</div><div>${esc(i.message||'')}</div><div class="small">${esc(i.status||'New')}</div><div class="actions"><button data-is="${i.id}">Mark Resolved</button><button class="danger" data-idel="${i.id}">Delete</button></div></div>`).join('')||'<p>No inquiries yet.</p>';a.forEach(i=>{$(`[data-is="${i.id}"]`).onclick=async()=>{await updateDoc(doc(db,'inquiries',i.id),{status:'Resolved',updatedAt:serverTimestamp()});loadInquiries()};$(`[data-idel="${i.id}"]`).onclick=async()=>{if(confirm('Delete this inquiry?')){await deleteDoc(doc(db,'inquiries',i.id));loadInquiries()}}})}
+
+onAuthStateChanged(auth,user=>{if(user){$('loginCard').classList.add('hidden');$('adminApp').classList.remove('hidden');loadProducts();loadHome();loadCategories();loadCollections();loadAbout();loadInquiries()}else{$('adminApp').classList.add('hidden');$('loginCard').classList.remove('hidden')}});
 </script>
 </body>
 </html>
