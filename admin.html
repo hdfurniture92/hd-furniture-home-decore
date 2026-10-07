@@ -165,7 +165,7 @@ import{firebaseConfig}from'./firebase-config.js';
 
 const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getFirestore(app),$=id=>document.getElementById(id);const imageViewer=$('imageViewer'),viewerImage=$('viewerImage');
 let viewerImages=[],viewerIndex=0;
-function openProductImage(src){viewerImages=[src];viewerIndex=0;viewerImage.src=src;imageViewer.classList.add('show')}
+window.openProductImage=function(src){viewerImages=[src];viewerIndex=0;viewerImage.src=src;imageViewer.classList.add('show')}
 function closeProductImage(){imageViewer.classList.remove('show');viewerImage.src=''}
 $('viewerClose').onclick=closeProductImage;
 $('viewerPrev').onclick=()=>{};
