@@ -263,14 +263,70 @@ $('homeForm').onsubmit=async e=>{e.preventDefault();setStatus('homeStatus','Savi
 
 function resetCat(){$('categoryForm').reset();$('categoryId').value='';$('saveCatBtn').textContent='Add Category';$('cancelCat').classList.add('hidden');$('catOrder').value=0}
 $('cancelCat').onclick=resetCat;
-async function loadCategories(){try{const s=await getDocs(collection(db,'categories'));const a=s.docs.map(d=>({id:d.id,...d.data()})).sort((x,y)=>(x.order||0)-(y.order||0));$('categoriesList').innerHTML=a.map(c=>`<div class="row"><div class="row-head"><div><h3>${esc(c.name)}</h3><div class="muted">${esc(c.subtitle||'')}</div></div><div><button type="button" data-ce="${esc(c.id)}">Edit</button> <button type="button" class="danger" data-cd="${esc(c.id)}">Delete</button></div></div></div>`).join('')||'<p>No categories yet.</p>';}catch(err){setStatus('catStatus','Load failed: '+(err.message||err));}}
-$('categoriesList').onclick=async e=>{const edit=e.target.closest('[data-ce]');const del=e.target.closest('[data-cd]');if(edit){try{const id=edit.dataset.ce;const s=await getDoc(doc(db,'categories',id));if(!s.exists())return;const c=s.data();$('categoryId').value=id;$('catName').value=c.name||'';$('catSubtitle').value=c.subtitle||'';$('catTarget').value=c.target||'featured';$('catOrder').value=c.order||0;$('saveCatBtn').textContent='Save Changes';$('cancelCat').classList.remove('hidden');document.querySelector('[data-tab="categoriesPanel"]').click();}catch(err){setStatus('catStatus','Edit failed: '+(err.message||err));}}else if(del){const id=del.dataset.cd;if(!confirm('Delete this category?'))return;try{await deleteDoc(doc(db,'categories',id));setStatus('catStatus','Category deleted.');await loadCategories();}catch(err){setStatus('catStatus','Delete failed: '+(err.message||err));}}};
+async function loadCategories(){
+ try{
+  const s=await getDocs(collection(db,'categories'));
+  const a=s.docs.map(d=>({id:d.id,...d.data()})).sort((x,y)=>(x.order||0)-(y.order||0));
+  const box=$('categoriesList');
+  box.innerHTML=a.map(c=>`<div class="row"><div class="row-head"><div><h3>${esc(c.name)}</h3><div class="muted">${esc(c.subtitle||'')}</div></div><div><button type="button" class="catEditBtn" data-id="${esc(c.id)}">Edit</button> <button type="button" class="danger catDeleteBtn" data-id="${esc(c.id)}">Delete</button></div></div></div>`).join('')||'<p>No categories yet.</p>';
+  box.querySelectorAll('.catEditBtn').forEach(btn=>btn.addEventListener('click',async ev=>{
+   ev.preventDefault(); ev.stopPropagation();
+   try{
+    const id=btn.getAttribute('data-id');
+    const snap=await getDoc(doc(db,'categories',id));
+    if(!snap.exists()){setStatus('catStatus','Category not found.');return;}
+    const c=snap.data();
+    $('categoryId').value=id; $('catName').value=c.name||''; $('catSubtitle').value=c.subtitle||'';
+    $('catTarget').value=c.target||'featured'; $('catOrder').value=c.order||0;
+    $('saveCatBtn').textContent='Save Changes'; $('cancelCat').classList.remove('hidden');
+    const tab=document.querySelector('[data-tab="categoriesPanel"]');
+    if(tab)tab.click();
+    $('catName').focus();
+   }catch(err){setStatus('catStatus','Edit failed: '+(err.message||err));}
+  }));
+  box.querySelectorAll('.catDeleteBtn').forEach(btn=>btn.addEventListener('click',async ev=>{
+   ev.preventDefault(); ev.stopPropagation();
+   const id=btn.getAttribute('data-id');
+   if(!confirm('Delete this category?'))return;
+   try{await deleteDoc(doc(db,'categories',id));setStatus('catStatus','Category deleted.');await loadCategories();}
+   catch(err){setStatus('catStatus','Delete failed: '+(err.message||err));}
+  }));
+ }catch(err){setStatus('catStatus','Load failed: '+(err.message||err));}
+}
 $('categoryForm').onsubmit=async e=>{e.preventDefault();setStatus('catStatus','Saving...');try{const id=$('categoryId').value;const data={name:$('catName').value.trim(),subtitle:$('catSubtitle').value.trim(),target:$('catTarget').value,order:Number($('catOrder').value)||0,updatedAt:serverTimestamp()};if(id)await updateDoc(doc(db,'categories',id),data);else{data.createdAt=serverTimestamp();await addDoc(collection(db,'categories'),data)}resetCat();setStatus('catStatus','Saved successfully.');await loadCategories();}catch(err){setStatus('catStatus','Save failed: '+(err.message||err));}};
 
 function resetCollection(){$('collectionForm').reset();$('collectionId').value='';$('saveCollectionBtn').textContent='Add Collection Card';$('cancelCollection').classList.add('hidden');$('collectionOrder').value=0}
 $('cancelCollection').onclick=resetCollection;
-async function loadCollections(){const s=await getDocs(collection(db,'collections'));const a=s.docs.map(d=>({id:d.id,...d.data()})).sort((x,y)=>(x.order||0)-(y.order||0));$('collectionsList').innerHTML=a.map(c=>`<div class="row"><div class="row-head"><div><h3>${esc(c.title)}</h3><div class="muted">${esc(c.type)} · ${esc(c.description||'')}</div>${c.imageUrl?`<img class="thumb" src="${esc(c.imageUrl)}">`:''}</div><div><button type="button" data-oe="${c.id}">Edit</button> <button type="button" class="danger" data-od="${c.id}">Delete</button></div></div></div>`).join('')||'<p>No collection cards yet.</p>';}
-$('collectionsList').addEventListener('click',async e=>{const edit=e.target.closest('[data-oe]');const del=e.target.closest('[data-od]');if(edit){const id=edit.dataset.oe;const s=await getDoc(doc(db,'collections',id));if(!s.exists())return;const c=s.data();$('collectionId').value=id;$('collectionType').value=c.type||'furniture';$('collectionTitle').value=c.title||'';$('collectionDescription').value=c.description||'';$('collectionImageUrl').value=c.imageUrl||'';$('collectionOrder').value=c.order||0;$('saveCollectionBtn').textContent='Save Changes';$('cancelCollection').classList.remove('hidden');return;}if(del){const id=del.dataset.od;if(!confirm('Delete this collection card?'))return;try{await deleteDoc(doc(db,'collections',id));await loadCollections();setStatus('collectionStatus','Collection deleted.')}catch(err){setStatus('collectionStatus','Delete failed: '+err.message)}}});
+async function loadCollections(){
+ try{
+  const s=await getDocs(collection(db,'collections'));
+  const a=s.docs.map(d=>({id:d.id,...d.data()})).sort((x,y)=>(x.order||0)-(y.order||0));
+  const box=$('collectionsList');
+  box.innerHTML=a.map(c=>`<div class="row"><div class="row-head"><div><h3>${esc(c.title)}</h3><div class="muted">${esc(c.type)} · ${esc(c.description||'')}</div>${c.imageUrl?`<img class="thumb" src="${esc(c.imageUrl)}">`:''}</div><div><button type="button" class="colEditBtn" data-id="${esc(c.id)}">Edit</button> <button type="button" class="danger colDeleteBtn" data-id="${esc(c.id)}">Delete</button></div></div></div>`).join('')||'<p>No collection cards yet.</p>';
+  box.querySelectorAll('.colEditBtn').forEach(btn=>btn.addEventListener('click',async ev=>{
+   ev.preventDefault(); ev.stopPropagation();
+   try{
+    const id=btn.getAttribute('data-id');
+    const snap=await getDoc(doc(db,'collections',id));
+    if(!snap.exists()){setStatus('collectionStatus','Collection not found.');return;}
+    const c=snap.data();
+    $('collectionId').value=id; $('collectionType').value=c.type||'furniture'; $('collectionTitle').value=c.title||'';
+    $('collectionDescription').value=c.description||''; $('collectionImageUrl').value=c.imageUrl||''; $('collectionOrder').value=c.order||0;
+    $('saveCollectionBtn').textContent='Save Changes'; $('cancelCollection').classList.remove('hidden');
+    const tab=document.querySelector('[data-tab="collectionsPanel"]');
+    if(tab)tab.click();
+    $('collectionTitle').focus();
+   }catch(err){setStatus('collectionStatus','Edit failed: '+(err.message||err));}
+  }));
+  box.querySelectorAll('.colDeleteBtn').forEach(btn=>btn.addEventListener('click',async ev=>{
+   ev.preventDefault(); ev.stopPropagation();
+   const id=btn.getAttribute('data-id');
+   if(!confirm('Delete this collection card?'))return;
+   try{await deleteDoc(doc(db,'collections',id));setStatus('collectionStatus','Collection deleted.');await loadCollections();}
+   catch(err){setStatus('collectionStatus','Delete failed: '+(err.message||err));}
+  }));
+ }catch(err){setStatus('collectionStatus','Load failed: '+(err.message||err));}
+}
 $('collectionForm').onsubmit=async e=>{e.preventDefault();setStatus('collectionStatus','Saving...');try{const id=$('collectionId').value;const old=id?(await getDoc(doc(db,'collections',id))).data():null;let image=$('collectionImageUrl').value.trim()||old?.imageUrl||'';if($('collectionImage').files[0])image=await compressImage($('collectionImage').files[0]);const data={type:$('collectionType').value,title:$('collectionTitle').value.trim(),description:$('collectionDescription').value.trim(),imageUrl:image,order:Number($('collectionOrder').value)||0,updatedAt:serverTimestamp()};if(id)await updateDoc(doc(db,'collections',id),data);else{data.createdAt=serverTimestamp();await addDoc(collection(db,'collections'),data)}resetCollection();setStatus('collectionStatus','Saved successfully.');loadCollections()}catch(err){setStatus('collectionStatus','Save failed: '+err.message)}};
 
 async function loadAbout(){const s=await getDoc(doc(db,'siteContent','business'));const p=s.exists()?s.data():{};for(const [id,key] of Object.entries({aboutEyebrow:'aboutEyebrow',contactEyebrow:'contactEyebrow',aboutTitle:'aboutTitle',aboutText:'aboutText',contactTitle:'contactTitle',contactText:'contactText',footerBrand:'footerBrand',footerText:'footerText',phone:'phone',businessEmail:'businessEmail',whatsapp:'whatsapp',address:'address'}))$(id).value=p[key]||''}
