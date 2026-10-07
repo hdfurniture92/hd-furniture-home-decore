@@ -179,8 +179,8 @@ document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{document.querySelect
 $('loginForm').onsubmit=async e=>{e.preventDefault();setStatus('loginStatus','Logging in...');try{await signInWithEmailAndPassword(auth,$('loginEmail').value,$('loginPassword').value);setStatus('loginStatus','');}catch(err){setStatus('loginStatus',(err.code||'ERROR')+': '+(err.message||''));}};
 $('logoutBtn').onclick=()=>signOut(auth);
 
-async function compressImage(file,max=850,q=.65){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>{const i=new Image();i.onload=()=>{const s=Math.min(1,max/Math.max(i.width,i.height)),w=Math.round(i.width*s),h=Math.round(i.height*s),c=document.createElement('canvas');c.width=w;c.height=h;c.getContext('2d').drawImage(i,0,0,w,h);const d=c.toDataURL('image/jpeg',q);if(d.length>850000)rej(new Error('Image is too large'));else res(d)};i.onerror=rej;i.src=r.result};r.onerror=rej;r.readAsDataURL(file)})}
-async function fileOrUrl(file,url){return file?await compressImage(file):url||''}
+async function compressImage(file,max=700,q=.55){return new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>{const i=new Image();i.onload=()=>{const s=Math.min(1,max/Math.max(i.width,i.height)),w=Math.max(1,Math.round(i.width*s)),h=Math.max(1,Math.round(i.height*s)),c=document.createElement('canvas');c.width=w;c.height=h;c.getContext('2d').drawImage(i,0,0,w,h);let d=c.toDataURL('image/jpeg',q);if(d.length>240000)d=c.toDataURL('image/jpeg',.42);if(d.length>280000)reject(new Error('Image is too large. Please choose a smaller image.'));else resolve(d)};i.onerror=()=>reject(new Error('Could not read image'));i.src=r.result};r.onerror=()=>reject(new Error('Could not read file'));r.readAsDataURL(file)})}
+function fileOrUrl(file,url){return file?await compressImage(file):url||''}
 function productImages(p){return Array.isArray(p?.imageUrls)&&p.imageUrls.length?p.imageUrls:(p?.imageUrl?[p.imageUrl]:[]);}
 async function compressImage(file){
  return new Promise((resolve,reject)=>{
